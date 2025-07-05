@@ -106,6 +106,7 @@ const ProductCatalog = () => {
                 short_description={product.short_description}
                 price={product.price}
                 main_image={product.main_image}
+                images={product.images}
                 features={product.features}
                 category={product.category}
                 onAddToCart={() => addToCart(product)}

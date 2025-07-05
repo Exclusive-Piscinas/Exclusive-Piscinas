@@ -41,7 +41,7 @@ export const useCategories = () => {
     }
   };
 
-  const createCategory = async (categoryData: Partial<Category>) => {
+  const createCategory = async (categoryData: { name: string; slug: string; description?: string; image_url?: string; display_order?: number; active?: boolean }) => {
     try {
       const { data, error } = await supabase
         .from('categories')

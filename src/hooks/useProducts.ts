@@ -82,7 +82,7 @@ export const useProducts = () => {
     }
   };
 
-  const createProduct = async (productData: Partial<Product>) => {
+  const createProduct = async (productData: { name: string; slug: string; category_id?: string; description?: string; short_description?: string; price?: number; sale_price?: number; features?: string[]; specifications?: any; images?: string[]; main_image?: string; active?: boolean; featured?: boolean; stock_status?: string; meta_title?: string; meta_description?: string }) => {
     try {
       const { data, error } = await supabase
         .from('products')

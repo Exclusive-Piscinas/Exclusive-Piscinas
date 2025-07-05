@@ -7,7 +7,7 @@ interface ProductCardProps {
   short_description: string | null;
   price: number | null;
   main_image: string | null;
-  images: string[] | null;
+  images?: string[] | null;
   features: string[] | null;
   category?: {
     name: string;
