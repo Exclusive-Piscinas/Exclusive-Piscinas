@@ -1,0 +1,132 @@
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+
+const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navItems = [
+    { name: 'Início', href: '#inicio' },
+    { name: 'Produtos', href: '#produtos' },
+    { name: 'Piscinas', href: '#piscinas' },
+    { name: 'Spas', href: '#spas' },
+    { name: 'Acessórios', href: '#acessorios' },
+    { name: 'Contato', href: '#contato' },
+  ];
+
+  return (
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-background/95 backdrop-blur-lg border-b border-border/50' 
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="container-custom">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center animate-pulse-glow">
+                <span className="text-2xl font-bold text-primary-foreground">E</span>
+              </div>
+            </div>
+            <div className="hidden sm:block">
+              <h1 className="text-2xl font-bold">
+                <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
+                  Exclusive
+                </span>
+              </h1>
+              <p className="text-xs text-muted-foreground -mt-1">Premium Pools & Spas</p>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.querySelector(item.href);
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
+
+          {/* CTA Button */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Button variant="outline" size="sm" className="btn-outline">
+              Falar com Vendedor
+            </Button>
+            <Button className="btn-primary">
+              Pré-Orçamento
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden relative w-6 h-6 flex flex-col justify-center items-center"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <span className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
+              isMobileMenuOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'
+            }`} />
+            <span className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
+              isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+            }`} />
+            <span className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
+              isMobileMenuOpen ? '-rotate-45 -translate-y-0.5' : 'translate-y-1'
+            }`} />
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border/50">
+            <nav className="container-custom py-6 space-y-4">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="block nav-link text-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    const element = document.querySelector(item.href);
+                    element?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  {item.name}
+                </a>
+              ))}
+              <div className="pt-4 space-y-3">
+                <Button variant="outline" className="w-full btn-outline">
+                  Falar com Vendedor
+                </Button>
+                <Button className="w-full btn-primary">
+                  Pré-Orçamento
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
+
+export default Header;
