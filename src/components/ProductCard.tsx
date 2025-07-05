@@ -1,37 +1,56 @@
 import { Button } from '@/components/ui/button';
 
 interface ProductCardProps {
-  image: string;
-  title: string;
-  description: string;
-  price?: string;
-  category: string;
-  features?: string[];
+  id: string;
+  name: string;
+  description: string | null;
+  short_description: string | null;
+  price: number | null;
+  main_image: string | null;
+  images: string[] | null;
+  features: string[] | null;
+  category?: {
+    name: string;
+    slug: string;
+  };
+  onAddToCart?: () => void;
 }
 
-const ProductCard = ({ image, title, description, price, category, features }: ProductCardProps) => {
+const ProductCard = ({ 
+  id, 
+  name, 
+  description, 
+  short_description,
+  price, 
+  main_image, 
+  features, 
+  category,
+  onAddToCart 
+}: ProductCardProps) => {
   return (
     <div className="card-premium group">
       {/* Image Container */}
       <div className="relative overflow-hidden">
         <img
-          src={image}
-          alt={title}
+          src={main_image || '/placeholder.svg'}
+          alt={name}
           className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
         />
         
         {/* Category Badge */}
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 bg-gradient-primary text-primary-foreground text-sm font-medium rounded-full">
-            {category}
-          </span>
-        </div>
+        {category && (
+          <div className="absolute top-4 left-4">
+            <span className="px-3 py-1 bg-gradient-primary text-primary-foreground text-sm font-medium rounded-full">
+              {category.name}
+            </span>
+          </div>
+        )}
 
         {/* Price Badge */}
         {price && (
           <div className="absolute top-4 right-4">
             <span className="px-3 py-1 bg-accent text-accent-foreground text-sm font-bold rounded-full">
-              {price}
+              R$ {price.toLocaleString('pt-BR')}
             </span>
           </div>
         )}
@@ -47,11 +66,11 @@ const ProductCard = ({ image, title, description, price, category, features }: P
       {/* Content */}
       <div className="p-6 space-y-4">
         <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">
-          {title}
+          {name}
         </h3>
         
         <p className="text-muted-foreground leading-relaxed">
-          {description}
+          {short_description || description}
         </p>
 
         {/* Features */}
@@ -71,7 +90,11 @@ const ProductCard = ({ image, title, description, price, category, features }: P
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
-          <Button variant="outline" className="btn-outline flex-1">
+          <Button 
+            variant="outline" 
+            className="btn-outline flex-1"
+            onClick={onAddToCart}
+          >
             Adicionar ao Orçamento
           </Button>
           <Button className="btn-primary flex-1">
