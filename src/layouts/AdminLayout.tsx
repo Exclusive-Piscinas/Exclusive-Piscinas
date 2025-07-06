@@ -1,63 +1,58 @@
 import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { 
-  SidebarProvider, 
-  SidebarTrigger, 
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar 
-} from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  FileText, 
-  Users, 
-  Settings, 
-  LogOut,
-  FileImage,
-  Quote
-} from 'lucide-react';
-
-const sidebarItems = [
-  { title: "Dashboard", url: "/admin", icon: LayoutDashboard, exact: true },
-  { title: "Conteúdo do Site", url: "/admin/content", icon: FileImage },
-  { title: "Produtos", url: "/admin/products", icon: Package },
-  { title: "Categorias", url: "/admin/categories", icon: Users },
-  { title: "Orçamentos", url: "/admin/quotes", icon: Quote },
-  { title: "Configurações", url: "/admin/settings", icon: Settings },
-];
-
+import { LayoutDashboard, Package, FileText, Users, Settings, LogOut, FileImage, Quote } from 'lucide-react';
+const sidebarItems = [{
+  title: "Dashboard",
+  url: "/admin",
+  icon: LayoutDashboard,
+  exact: true
+}, {
+  title: "Conteúdo do Site",
+  url: "/admin/content",
+  icon: FileImage
+}, {
+  title: "Produtos",
+  url: "/admin/products",
+  icon: Package
+}, {
+  title: "Categorias",
+  url: "/admin/categories",
+  icon: Users
+}, {
+  title: "Orçamentos",
+  url: "/admin/quotes",
+  icon: Quote
+}, {
+  title: "Configurações",
+  url: "/admin/settings",
+  icon: Settings
+}];
 function AdminSidebar() {
-  const { state } = useSidebar();
+  const {
+    state
+  } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
-  const { signOut } = useAuth();
+  const {
+    signOut
+  } = useAuth();
   const navigate = useNavigate();
-
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
   };
-
   const isActive = (path: string, exact?: boolean) => {
     if (exact) {
       return location.pathname === path;
     }
     return location.pathname.startsWith(path);
   };
-
-  return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"}>
-      <SidebarContent>
+  return <Sidebar className={collapsed ? "w-14" : "w-60"}>
+      <SidebarContent className="bg-gray-600">
         <SidebarGroup>
           <SidebarGroupLabel className="text-foreground font-semibold">
             {!collapsed && "Exclusive Admin"}
@@ -65,34 +60,23 @@ function AdminSidebar() {
           
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {sidebarItems.map(item => <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      end={item.exact}
-                      className={({ isActive: navIsActive }) => `
+                    <NavLink to={item.url} end={item.exact} className={({
+                  isActive: navIsActive
+                }) => `
                         flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
-                        ${navIsActive || isActive(item.url, item.exact) 
-                          ? 'bg-accent text-accent-foreground font-medium' 
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                        }
-                      `}
-                    >
+                        ${navIsActive || isActive(item.url, item.exact) ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}
+                      `}>
                       <item.icon className="h-4 w-4 flex-shrink-0" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                </SidebarMenuItem>)}
               
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Button
-                    variant="ghost"
-                    onClick={handleSignOut}
-                    className="w-full justify-start gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  >
+                  <Button variant="ghost" onClick={handleSignOut} className="w-full justify-start gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/50">
                     <LogOut className="h-4 w-4 flex-shrink-0" />
                     {!collapsed && <span>Sair</span>}
                   </Button>
@@ -102,35 +86,29 @@ function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-    </Sidebar>
-  );
+    </Sidebar>;
 }
-
 export const AdminLayout = () => {
-  const { user, loading: authLoading } = useAuth();
+  const {
+    user,
+    loading: authLoading
+  } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!authLoading && !user) {
       navigate('/auth');
     }
   }, [user, authLoading, navigate]);
-
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+    return <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!user) return null;
-
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AdminSidebar />
         
@@ -142,11 +120,7 @@ export const AdminLayout = () => {
               <h1 className="text-lg font-semibold text-foreground">
                 Painel Administrativo
               </h1>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/')}
-                size="sm"
-              >
+              <Button variant="outline" onClick={() => navigate('/')} size="sm">
                 Ver Site
               </Button>
             </div>
@@ -158,6 +132,5 @@ export const AdminLayout = () => {
           </div>
         </main>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
