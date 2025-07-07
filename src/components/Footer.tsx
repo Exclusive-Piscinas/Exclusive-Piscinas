@@ -31,6 +31,7 @@ const Footer = () => {
     },
     {
       title: "Contato",
+      id: "contato",
       links: [
         { name: "WhatsApp", href: "https://wa.me/5511999999999" },
         { name: "E-mail", href: "mailto:contato@exclusive.com.br" },
@@ -79,7 +80,7 @@ const Footer = () => {
 
           {/* Footer Sections */}
           {footerSections.map((section) => (
-            <div key={section.title}>
+            <div key={section.title} id={section.id || undefined}>
               <h4 className="text-lg font-semibold text-foreground mb-4">
                 {section.title}
               </h4>

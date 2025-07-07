@@ -80,7 +80,10 @@ const ProductCatalog = () => {
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => {
+              setSelectedCategory(null);
+              document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
           >
             Todos
           </Button>
@@ -88,7 +91,10 @@ const ProductCatalog = () => {
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => {
+                setSelectedCategory(category.id);
+                document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
             >
               {category.name}
             </Button>

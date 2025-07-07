@@ -97,8 +97,11 @@ const ProductCard = ({
           >
             Adicionar ao Orçamento
           </Button>
-          <Button className="btn-primary flex-1">
-            Saiba Mais
+          <Button 
+            className="btn-primary flex-1"
+            onClick={() => window.location.href = `/produto/${id}`}
+          >
+            Ver Detalhes
           </Button>
         </div>
       </div>

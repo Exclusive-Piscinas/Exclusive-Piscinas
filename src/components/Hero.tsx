@@ -90,11 +90,18 @@ const Hero = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-8">
-              <Button className="btn-primary text-lg px-12 py-6">
-                Explore Nossos Produtos
+              <Button 
+                className="btn-primary text-lg px-12 py-6"
+                onClick={() => document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Ver Catálogo Completo
               </Button>
-              <Button variant="outline" className="btn-outline text-lg px-12 py-6">
-                Solicitar Orçamento
+              <Button 
+                variant="outline" 
+                className="btn-outline text-lg px-12 py-6"
+                onClick={() => document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Solicitar Orçamento Gratuito
               </Button>
             </div>
           </div>
