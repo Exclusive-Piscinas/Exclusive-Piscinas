@@ -1,4 +1,6 @@
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Phone, Mail, MessageCircle } from 'lucide-react';
 
 const CTASection = () => {
   return (
@@ -24,19 +26,78 @@ const CTASection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg px-12 py-6 bg-accent hover:bg-accent-glow text-accent-foreground font-semibold rounded-xl shadow-glow hover:shadow-xl hover:scale-105 transition-all"
-              >
-                Solicitar Orçamento Grátis
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="text-lg px-12 py-6 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold rounded-xl transition-all"
-              >
-                Falar com Especialista
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    size="lg" 
+                    className="text-lg px-12 py-6 bg-accent hover:bg-accent-glow text-accent-foreground font-semibold rounded-xl shadow-glow hover:shadow-xl hover:scale-105 transition-all"
+                  >
+                    Solicitar Orçamento Grátis
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Solicitar Orçamento</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">Escolha como prefere entrar em contato conosco:</p>
+                    <div className="grid gap-3">
+                      <Button 
+                        onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um orçamento para piscina/spa.', '_blank')}
+                        className="justify-start gap-3"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        WhatsApp (Mais Rápido)
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => window.location.href = 'tel:+5511999999999'}
+                        className="justify-start gap-3"
+                      >
+                        <Phone className="h-4 w-4" />
+                        Ligar Agora
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    className="text-lg px-12 py-6 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold rounded-xl transition-all"
+                  >
+                    Falar com Especialista
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Falar com Especialista</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">Nossa equipe técnica está pronta para te atender:</p>
+                    <div className="grid gap-3">
+                      <Button 
+                        onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de falar com um especialista sobre piscinas/spas.', '_blank')}
+                        className="justify-start gap-3"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        WhatsApp Técnico
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Consulta Técnica'}
+                        className="justify-start gap-3"
+                      >
+                        <Mail className="h-4 w-4" />
+                        E-mail Técnico
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -44,13 +105,14 @@ const CTASection = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-primary-foreground/10 backdrop-blur-sm rounded-2xl border border-primary-foreground/20">
               <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📱</span>
+                <MessageCircle className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">WhatsApp</h3>
               <p className="text-primary-foreground/80 mb-4">Resposta rápida e atendimento personalizado</p>
               <Button 
                 variant="outline" 
                 className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+                onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de mais informações sobre piscinas e spas.', '_blank')}
               >
                 Chamar no WhatsApp
               </Button>
@@ -58,13 +120,14 @@ const CTASection = () => {
 
             <div className="text-center p-6 bg-primary-foreground/10 backdrop-blur-sm rounded-2xl border border-primary-foreground/20">
               <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📧</span>
+                <Mail className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">E-mail</h3>
               <p className="text-primary-foreground/80 mb-4">Envie sua dúvida ou solicite informações</p>
               <Button 
                 variant="outline" 
                 className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+                onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Informações sobre produtos'}
               >
                 Enviar E-mail
               </Button>
@@ -72,13 +135,14 @@ const CTASection = () => {
 
             <div className="text-center p-6 bg-primary-foreground/10 backdrop-blur-sm rounded-2xl border border-primary-foreground/20">
               <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📞</span>
+                <Phone className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">Telefone</h3>
               <p className="text-primary-foreground/80 mb-4">Ligue e fale diretamente com nossa equipe</p>
               <Button 
                 variant="outline" 
                 className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+                onClick={() => window.location.href = 'tel:+5511999999999'}
               >
                 Ligar Agora
               </Button>

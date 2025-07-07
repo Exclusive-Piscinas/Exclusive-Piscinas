@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import heroPool from '@/assets/hero-pool.jpg';
+import spaLuxury from '@/assets/spa-luxury.jpg';
+import bathtubLuxury from '@/assets/bathtub-luxury.jpg';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -13,13 +15,13 @@ const Hero = () => {
       description: "Projetos exclusivos com materiais premium e instalação profissional",
     },
     {
-      image: heroPool,
+      image: spaLuxury,
       title: "Spas & Banheiras",
       subtitle: "Relaxamento e bem-estar em casa",
       description: "Equipamentos de alta qualidade para momentos únicos de relaxamento",
     },
     {
-      image: heroPool,
+      image: bathtubLuxury,
       title: "Instalação Completa",
       subtitle: "Do projeto à entrega final",
       description: "Equipe especializada para realizar seu sonho com excelência",
