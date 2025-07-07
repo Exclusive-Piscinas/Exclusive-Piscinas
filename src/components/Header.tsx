@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useWhatsApp } from '@/hooks/useWhatsApp';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { openWhatsApp, getDefaultMessages } = useWhatsApp();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,10 +71,18 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="btn-outline">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="btn-outline"
+              onClick={() => openWhatsApp(getDefaultMessages.vendedor)}
+            >
               Falar com Vendedor
             </Button>
-            <Button className="btn-primary">
+            <Button 
+              className="btn-primary"
+              onClick={() => openWhatsApp(getDefaultMessages.preOrcamento)}
+            >
               Pré-Orçamento
             </Button>
           </div>
@@ -114,10 +124,17 @@ const Header = () => {
                 </a>
               ))}
               <div className="pt-4 space-y-3">
-                <Button variant="outline" className="w-full btn-outline">
+                <Button 
+                  variant="outline" 
+                  className="w-full btn-outline"
+                  onClick={() => openWhatsApp(getDefaultMessages.vendedor)}
+                >
                   Falar com Vendedor
                 </Button>
-                <Button className="w-full btn-primary">
+                <Button 
+                  className="w-full btn-primary"
+                  onClick={() => openWhatsApp(getDefaultMessages.preOrcamento)}
+                >
                   Pré-Orçamento
                 </Button>
               </div>

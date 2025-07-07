@@ -1,12 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useProducts, Product } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+import { BasicFields, ContentFields, SEOFields } from '@/components/admin/forms/ProductFormFields';
 import {
   Dialog,
   DialogContent,
@@ -229,7 +226,12 @@ const AdminProducts = () => {
     }
   };
 
-  const addFeature = () => {
+  // Optimized form field handlers using useCallback to prevent re-renders
+  const handleFieldChange = useCallback((field: keyof typeof formData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const addFeature = useCallback(() => {
     if (newFeature.trim()) {
       setFormData(prev => ({
         ...prev,
@@ -237,14 +239,18 @@ const AdminProducts = () => {
       }));
       setNewFeature('');
     }
-  };
+  }, [newFeature]);
 
-  const removeFeature = (index: number) => {
+  const removeFeature = useCallback((index: number) => {
     setFormData(prev => ({
       ...prev,
       features: prev.features.filter((_, i) => i !== index)
     }));
-  };
+  }, []);
+
+  const handleNewFeatureChange = useCallback((value: string) => {
+    setNewFeature(value);
+  }, []);
 
   const ProductForm = ({ isEdit = false }: { isEdit?: boolean }) => (
     <Tabs defaultValue="basic" className="w-full">
@@ -256,193 +262,42 @@ const AdminProducts = () => {
       </TabsList>
 
       <TabsContent value="basic" className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nome do Produto *</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => {
-                const name = e.target.value;
-                setFormData(prev => ({ 
-                  ...prev, 
-                  name,
-                  slug: generateSlug(name)
-                }));
-              }}
-              placeholder="Nome do produto"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="slug">Slug (URL)</Label>
-            <Input
-              id="slug"
-              value={formData.slug}
-              onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-              placeholder="slug-do-produto"
-              className="font-mono text-sm"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="category_id">Categoria</Label>
-            <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map(category => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="price">Preço (R$)</Label>
-            <Input
-              id="price"
-              type="number"
-              value={formData.price}
-              onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="sale_price">Preço Promocional (R$)</Label>
-            <Input
-              id="sale_price"
-              type="number"
-              value={formData.sale_price}
-              onChange={(e) => setFormData(prev => ({ ...prev, sale_price: parseFloat(e.target.value) || 0 }))}
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="stock_status">Status do Estoque</Label>
-          <Select value={formData.stock_status} onValueChange={(value) => setFormData(prev => ({ ...prev, stock_status: value }))}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="in_stock">Em Estoque</SelectItem>
-              <SelectItem value="out_of_stock">Fora de Estoque</SelectItem>
-              <SelectItem value="on_backorder">Em Pedido</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="active"
-              checked={formData.active}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
-            />
-            <Label htmlFor="active">Produto ativo</Label>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="featured"
-              checked={formData.featured}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, featured: checked }))}
-            />
-            <Label htmlFor="featured">Produto em destaque</Label>
-          </div>
-        </div>
+        <BasicFields
+          formData={formData}
+          onFieldChange={handleFieldChange}
+          categories={categories}
+          generateSlug={generateSlug}
+        />
       </TabsContent>
 
       <TabsContent value="content" className="space-y-4">
+        <ContentFields
+          formData={formData}
+          onFieldChange={handleFieldChange}
+          newFeature={newFeature}
+          onNewFeatureChange={handleNewFeatureChange}
+          onAddFeature={addFeature}
+          onRemoveFeature={removeFeature}
+        />
+        
         <div className="space-y-2">
-          <Label htmlFor="short_description">Descrição Resumida</Label>
-          <Textarea
-            id="short_description"
-            value={formData.short_description}
-            onChange={(e) => setFormData(prev => ({ ...prev, short_description: e.target.value }))}
-            placeholder="Breve descrição do produto..."
-            rows={3}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Descrição Completa</Label>
           <RichTextEditor
             value={formData.description}
-            onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+            onChange={(value) => handleFieldChange('description', value)}
             placeholder="Descrição detalhada do produto..."
-          />
-        </div>
-
-        <div className="space-y-4">
-          <Label>Características</Label>
-          <div className="flex gap-2">
-            <Input
-              value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)}
-              placeholder="Nova característica..."
-              onKeyPress={(e) => e.key === 'Enter' && addFeature()}
-            />
-            <Button type="button" onClick={addFeature} size="sm">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          {formData.features.length > 0 && (
-            <div className="space-y-2">
-              {formData.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded">
-                  <span className="flex-1">{feature}</span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeFeature(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="specifications">Especificações Técnicas (JSON)</Label>
-          <Textarea
-            id="specifications"
-            value={formData.specifications}
-            onChange={(e) => setFormData(prev => ({ ...prev, specifications: e.target.value }))}
-            placeholder='{"Peso": "200kg", "Dimensões": "5x3x1.5m"}'
-            rows={6}
-            className="font-mono text-sm"
           />
         </div>
       </TabsContent>
 
       <TabsContent value="images" className="space-y-4">
         <div className="space-y-2">
-          <Label>Galeria de Imagens</Label>
           <ImageUploader
             onImageUploaded={(url) => {}}
             onImagesUploaded={(urls) => {
-              setFormData(prev => ({ 
-                ...prev, 
-                images: urls,
-                main_image: prev.main_image || urls[0] || ''
-              }));
+              handleFieldChange('images', urls);
+              if (!formData.main_image && urls[0]) {
+                handleFieldChange('main_image', urls[0]);
+              }
             }}
             currentImages={formData.images}
             multiple
@@ -453,17 +308,16 @@ const AdminProducts = () => {
 
         {formData.images.length > 0 && (
           <div className="space-y-2">
-            <Label htmlFor="main_image">Imagem Principal</Label>
             <Select 
               value={formData.main_image} 
-              onValueChange={(value) => setFormData(prev => ({ ...prev, main_image: value }))}
+              onValueChange={(value) => handleFieldChange('main_image', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione a imagem principal" />
               </SelectTrigger>
               <SelectContent>
                 {formData.images.map((image, index) => (
-                  <SelectItem key={index} value={image}>
+                  <SelectItem key={`img-${index}`} value={image}>
                     <div className="flex items-center gap-2">
                       <img src={image} alt={`Imagem ${index + 1}`} className="w-8 h-8 rounded object-cover" />
                       Imagem {index + 1}
@@ -477,34 +331,10 @@ const AdminProducts = () => {
       </TabsContent>
 
       <TabsContent value="seo" className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="meta_title">Meta Título</Label>
-          <Input
-            id="meta_title"
-            value={formData.meta_title}
-            onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
-            placeholder="Título otimizado para SEO..."
-            maxLength={60}
-          />
-          <p className="text-xs text-muted-foreground">
-            {formData.meta_title.length}/60 caracteres
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="meta_description">Meta Descrição</Label>
-          <Textarea
-            id="meta_description"
-            value={formData.meta_description}
-            onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
-            placeholder="Descrição otimizada para SEO..."
-            rows={3}
-            maxLength={160}
-          />
-          <p className="text-xs text-muted-foreground">
-            {formData.meta_description.length}/160 caracteres
-          </p>
-        </div>
+        <SEOFields
+          formData={formData}
+          onFieldChange={handleFieldChange}
+        />
       </TabsContent>
     </Tabs>
   );
