@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { 
   Settings, 
   Globe, 
@@ -24,6 +25,7 @@ import {
 
 const AdminSettings = () => {
   const { toast } = useToast();
+  const { content, updateContent } = useSiteContent();
   const [loading, setLoading] = useState(false);
   
   // Site Settings
@@ -73,11 +75,30 @@ const AdminSettings = () => {
     newsletter_notifications: false,
   });
 
+  // Load WhatsApp number from database on mount
+  useEffect(() => {
+    const whatsappContent = content.find(item => item.key === 'whatsapp_number');
+    if (whatsappContent?.content) {
+      setContactSettings(prev => ({ ...prev, whatsapp: whatsappContent.content }));
+    }
+  }, [content]);
+
   const handleSaveSettings = async (section: string) => {
     setLoading(true);
     try {
-      // Here you would typically save to your backend/database
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      // Save WhatsApp number to site_content when saving contact settings
+      if (section === 'contato') {
+        const whatsappContent = content.find(item => item.key === 'whatsapp_number');
+        if (whatsappContent) {
+          await updateContent(whatsappContent.id, {
+            ...whatsappContent,
+            content: contactSettings.whatsapp,
+          });
+        }
+      }
+      
+      // Simulate other settings save
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Configurações salvas!",
