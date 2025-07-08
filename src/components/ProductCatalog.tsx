@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import ProductCard from './ProductCard';
@@ -15,6 +15,22 @@ const ProductCatalog = () => {
   const { categories } = useCategories();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    function handleHashChange() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#produtos-')) {
+        const slug = hash.replace('#produtos-', '');
+        const category = categories.find(cat => cat.slug === slug);
+        if (category) setSelectedCategory(category.id);
+      } else {
+        setSelectedCategory(null);
+      }
+    }
+    handleHashChange(); // Chama ao montar
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [categories]);
 
   const filteredProducts = selectedCategory
     ? products.filter(product => product.category_id === selectedCategory)

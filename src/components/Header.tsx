@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWhatsApp } from '@/hooks/useWhatsApp';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openWhatsApp, getDefaultMessages } = useWhatsApp();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +20,6 @@ const Header = () => {
 
   const navItems = [
     { name: 'Início', href: '#inicio' },
-    { name: 'Produtos', href: '#produtos' },
     { name: 'Piscinas', href: '#piscinas' },
     { name: 'Spas', href: '#spas' },
     { name: 'Acessórios', href: '#acessorios' },
@@ -53,20 +55,47 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.querySelector(item.href);
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                {item.name}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const isCategory = ['Piscinas', 'Spas', 'Acessórios'].includes(item.name);
+              const slugMap = { 'Piscinas': 'piscinas', 'Spas': 'spas', 'Acessórios': 'acessorios' };
+              return (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="nav-link"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (isCategory) {
+                      if (location.pathname !== '/') {
+                        navigate('/', { replace: false });
+                        setTimeout(() => {
+                          window.location.hash = `#produtos-${slugMap[item.name]}`;
+                          const element = document.getElementById('produtos');
+                          element?.scrollIntoView({ behavior: 'smooth' });
+                        }, 50);
+                      } else {
+                        window.location.hash = `#produtos-${slugMap[item.name]}`;
+                        const element = document.getElementById('produtos');
+                        element?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    } else {
+                      if (location.pathname !== '/') {
+                        navigate('/', { replace: false });
+                        setTimeout(() => {
+                          const element = document.querySelector(item.href);
+                          element?.scrollIntoView({ behavior: 'smooth' });
+                        }, 50);
+                      } else {
+                        const element = document.querySelector(item.href);
+                        element?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }
+                  }}
+                >
+                  {item.name}
+                </a>
+              );
+            })}
           </nav>
 
           {/* CTA Button */}
@@ -108,21 +137,48 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border/50">
             <nav className="container-custom py-6 space-y-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block nav-link text-lg"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    const element = document.querySelector(item.href);
-                    element?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  {item.name}
-                </a>
-              ))}
+              {navItems.map((item) => {
+                const isCategory = ['Piscinas', 'Spas', 'Acessórios'].includes(item.name);
+                const slugMap = { 'Piscinas': 'piscinas', 'Spas': 'spas', 'Acessórios': 'acessorios' };
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block nav-link text-lg"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setIsMobileMenuOpen(false);
+                      if (isCategory) {
+                        if (location.pathname !== '/') {
+                          navigate('/', { replace: false });
+                          setTimeout(() => {
+                            window.location.hash = `#produtos-${slugMap[item.name]}`;
+                            const element = document.getElementById('produtos');
+                            element?.scrollIntoView({ behavior: 'smooth' });
+                          }, 50);
+                        } else {
+                          window.location.hash = `#produtos-${slugMap[item.name]}`;
+                          const element = document.getElementById('produtos');
+                          element?.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      } else {
+                        if (location.pathname !== '/') {
+                          navigate('/', { replace: false });
+                          setTimeout(() => {
+                            const element = document.querySelector(item.href);
+                            element?.scrollIntoView({ behavior: 'smooth' });
+                          }, 50);
+                        } else {
+                          const element = document.querySelector(item.href);
+                          element?.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
+                    }}
+                  >
+                    {item.name}
+                  </a>
+                );
+              })}
               <div className="pt-4 space-y-3">
                 <Button 
                   variant="outline" 

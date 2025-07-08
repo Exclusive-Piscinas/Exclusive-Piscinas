@@ -57,7 +57,10 @@ const ProductCard = ({
 
         {/* Overlay on Hover */}
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <Button className="btn-primary">
+          <Button 
+            className="btn-primary"
+            onClick={() => window.location.href = `/produto/${id}`}
+          >
             Ver Detalhes
           </Button>
         </div>
@@ -96,12 +99,6 @@ const ProductCard = ({
             onClick={onAddToCart}
           >
             Adicionar ao Orçamento
-          </Button>
-          <Button 
-            className="btn-primary flex-1"
-            onClick={() => window.location.href = `/produto/${id}`}
-          >
-            Ver Detalhes
           </Button>
         </div>
       </div>
