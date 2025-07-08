@@ -135,7 +135,7 @@ const AdminSettings = () => {
         </TabsList>
 
         {/* Site Settings */}
-        <TabsContent value="site">
+        <TabsContent value="site" forceMount>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -220,7 +220,7 @@ const AdminSettings = () => {
         </TabsContent>
 
         {/* Contact Settings */}
-        <TabsContent value="contact">
+        <TabsContent value="contact" forceMount>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -304,7 +304,7 @@ const AdminSettings = () => {
         </TabsContent>
 
         {/* Social Media Settings */}
-        <TabsContent value="social">
+        <TabsContent value="social" forceMount>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -369,7 +369,7 @@ const AdminSettings = () => {
         </TabsContent>
 
         {/* SEO Settings */}
-        <TabsContent value="seo">
+        <TabsContent value="seo" forceMount>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -461,7 +461,7 @@ const AdminSettings = () => {
         </TabsContent>
 
         {/* Notification Settings */}
-        <TabsContent value="notifications">
+        <TabsContent value="notifications" forceMount>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -540,7 +540,7 @@ const AdminSettings = () => {
         </TabsContent>
 
         {/* Advanced Settings */}
-        <TabsContent value="advanced">
+        <TabsContent value="advanced" forceMount>
           <div className="space-y-6">
             <Card>
               <CardHeader>
