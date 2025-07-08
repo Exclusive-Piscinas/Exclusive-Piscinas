@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Star, Users, Trophy, MapPin } from "lucide-react";
 
 const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -123,10 +124,10 @@ const TestimonialsSection = () => {
         {/* Social Proof Stats */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
           {[
-            { icon: "⭐", text: "4.9/5 Avaliação Média" },
-            { icon: "👥", text: "500+ Clientes Atendidos" },
-            { icon: "🏆", text: "98% Recomendação" },
-            { icon: "📍", text: "Todo o Brasil" }
+            { icon: <Star className="w-8 h-8 text-accent" />, text: "4.9/5 Avaliação Média" },
+            { icon: <Users className="w-8 h-8 text-accent" />, text: "500+ Clientes Atendidos" },
+            { icon: <Trophy className="w-8 h-8 text-accent" />, text: "98% Recomendação" },
+            { icon: <MapPin className="w-8 h-8 text-accent" />, text: "Todo o Brasil" }
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl mb-2">{stat.icon}</div>

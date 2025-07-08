@@ -1,25 +1,27 @@
+import { Droplet, Zap, Gem, Wrench } from "lucide-react";
+
 const FeaturesSection = () => {
   const features = [
     {
-      icon: "🏊‍♂️",
+      icon: <Droplet className="w-12 h-12 text-accent" />,
       title: "Projetos Personalizados",
       description: "Cada projeto é único e desenvolvido especialmente para seu espaço e necessidades.",
       highlights: ["Design exclusivo", "Medidas sob encomenda", "Consultoria especializada"]
     },
     {
-      icon: "⚡",
+      icon: <Zap className="w-12 h-12 text-accent" />,
       title: "Instalação Completa",
       description: "Equipe técnica especializada cuida de todo o processo, do projeto à entrega final.",
       highlights: ["Equipe certificada", "Prazos garantidos", "Pós-venda completo"]
     },
     {
-      icon: "💎",
+      icon: <Gem className="w-12 h-12 text-accent" />,
       title: "Materiais Premium",
       description: "Utilizamos apenas materiais de primeira qualidade com garantia estendida.",
       highlights: ["Marcas renomadas", "Garantia de 5 anos", "Tecnologia avançada"]
     },
     {
-      icon: "🛠️",
+      icon: <Wrench className="w-12 h-12 text-accent" />,
       title: "Manutenção & Suporte",
       description: "Serviço completo de manutenção preventiva e corretiva para máxima durabilidade.",
       highlights: ["Manutenção preventiva", "Suporte 24/7", "Peças originais"]
