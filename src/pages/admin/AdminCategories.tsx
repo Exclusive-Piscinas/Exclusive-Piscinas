@@ -100,14 +100,15 @@ const AdminCategories = () => {
   };
 
   const resetForm = () => {
-    setFormData({
+    setFormData(prev => ({
+      ...prev,
       name: '',
       slug: '',
       description: '',
       image_url: '',
-      display_order: categories.length,
+      display_order: 0,
       active: true,
-    });
+    }));
   };
 
   const handleCreate = () => {
@@ -117,14 +118,15 @@ const AdminCategories = () => {
 
   const handleEdit = (item: Category) => {
     setSelectedCategory(item);
-    setFormData({
-      name: item.name,
-      slug: item.slug,
+    setFormData(prev => ({
+      ...prev,
+      name: item.name || '',
+      slug: item.slug || '',
       description: item.description || '',
       image_url: item.image_url || '',
-      display_order: item.display_order,
+      display_order: item.display_order || 0,
       active: item.active || false,
-    });
+    }));
     setIsEditDialogOpen(true);
   };
 

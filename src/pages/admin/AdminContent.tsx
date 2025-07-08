@@ -105,14 +105,15 @@ const AdminContent = () => {
   ];
 
   const resetForm = () => {
-    setFormData({
+    setFormData(prev => ({
+      ...prev,
       key: '',
       title: '',
       content: '',
       image_url: '',
       settings: '{}',
       active: true,
-    });
+    }));
   };
 
   const handleCreate = () => {
@@ -122,14 +123,15 @@ const AdminContent = () => {
 
   const handleEdit = (item: SiteContent) => {
     setSelectedContent(item);
-    setFormData({
+    setFormData(prev => ({
+      ...prev,
       key: item.key,
       title: item.title || '',
       content: item.content || '',
       image_url: item.image_url || '',
       settings: JSON.stringify(item.settings || {}, null, 2),
       active: item.active || false,
-    });
+    }));
     setIsEditDialogOpen(true);
   };
 
