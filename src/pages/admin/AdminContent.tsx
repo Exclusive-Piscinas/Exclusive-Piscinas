@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useSiteContent, SiteContent } from '@/hooks/useSiteContent';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button } from '@/components/ui/button';
@@ -181,95 +181,86 @@ const AdminContent = () => {
     }
   };
 
-  const ContentForm = ({ isEdit = false }: { isEdit?: boolean }) => {
-    const titleRef = useRef<HTMLInputElement>(null);
-    useEffect(() => {
-      if (titleRef.current) {
-        titleRef.current.focus();
-      }
-    }, []);
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="key">Chave do Conteúdo</Label>
-            {isEdit ? (
-              <Input
-                id="key"
-                value={formData.key}
-                disabled
-                className="font-mono text-sm"
-              />
-            ) : (
-              <Select value={formData.key} onValueChange={(value) => setFormData(prev => ({ ...prev, key: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma chave" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CONTENT_KEYS.map(key => (
-                    <SelectItem key={key.value} value={key.value}>
-                      {key.label} ({key.value})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
+  const ContentForm = ({ isEdit = false }: { isEdit?: boolean }) => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="key">Chave do Conteúdo</Label>
+          {isEdit ? (
             <Input
-              id="title"
-              ref={titleRef}
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Título amigável do conteúdo"
+              id="key"
+              value={formData.key}
+              disabled
+              className="font-mono text-sm"
             />
-          </div>
+          ) : (
+            <Select value={formData.key} onValueChange={(value) => setFormData(prev => ({ ...prev, key: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma chave" />
+              </SelectTrigger>
+              <SelectContent>
+                {CONTENT_KEYS.map(key => (
+                  <SelectItem key={key.value} value={key.value}>
+                    {key.label} ({key.value})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         <div className="space-y-2">
-          <Label>Conteúdo</Label>
-          <RichTextEditor
-            value={formData.content}
-            onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
-            placeholder="Digite o conteúdo aqui..."
+          <Label htmlFor="title">Título</Label>
+          <Input
+            id="title"
+            value={formData.title}
+            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            placeholder="Título amigável do conteúdo"
           />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Imagem</Label>
-          <ImageUploader
-            onImageUploaded={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
-            currentImages={formData.image_url ? [formData.image_url] : []}
-            bucket="products"
-            folder="site-content"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="settings">Configurações (JSON)</Label>
-          <Textarea
-            id="settings"
-            value={formData.settings}
-            onChange={(e) => setFormData(prev => ({ ...prev, settings: e.target.value }))}
-            placeholder='{"button_text": "Saiba Mais", "link_url": "/sobre"}'
-            rows={4}
-            className="font-mono text-sm"
-          />
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="active"
-            checked={formData.active}
-            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
-          />
-          <Label htmlFor="active">Conteúdo ativo</Label>
         </div>
       </div>
-    );
-  };
+
+      <div className="space-y-2">
+        <Label>Conteúdo</Label>
+        <RichTextEditor
+          value={formData.content}
+          onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+          placeholder="Digite o conteúdo aqui..."
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Imagem</Label>
+        <ImageUploader
+          onImageUploaded={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+          currentImages={formData.image_url ? [formData.image_url] : []}
+          bucket="products"
+          folder="site-content"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="settings">Configurações (JSON)</Label>
+        <Textarea
+          id="settings"
+          value={formData.settings}
+          onChange={(e) => setFormData(prev => ({ ...prev, settings: e.target.value }))}
+          placeholder='{"button_text": "Saiba Mais", "link_url": "/sobre"}'
+          rows={4}
+          className="font-mono text-sm"
+        />
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="active"
+          checked={formData.active}
+          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
+        />
+        <Label htmlFor="active">Conteúdo ativo</Label>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
