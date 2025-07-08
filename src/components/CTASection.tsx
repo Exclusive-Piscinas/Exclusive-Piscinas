@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Phone, Mail, MessageCircle } from 'lucide-react';
-
 const CTASection = () => {
-  return (
-    <section className="section-padding bg-gradient-primary relative overflow-hidden">
+  return <section className="section-padding bg-gradient-primary relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-20 h-20 bg-accent/20 rounded-full blur-xl animate-pulse" />
-        <div className="absolute top-32 right-20 w-32 h-32 bg-accent-glow/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-primary-glow/30 rounded-full blur-lg animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-32 right-20 w-32 h-32 bg-accent-glow/20 rounded-full blur-2xl animate-pulse" style={{
+        animationDelay: '1s'
+      }} />
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-primary-glow/30 rounded-full blur-lg animate-pulse" style={{
+        animationDelay: '2s'
+      }} />
       </div>
 
-      <div className="container-custom relative z-10">
+      <div className="container-custom relative z-10 px-0">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main CTA */}
           <div className="mb-16">
@@ -28,10 +30,7 @@ const CTASection = () => {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    className="text-lg px-12 py-6 bg-accent hover:bg-accent-glow text-accent-foreground font-semibold rounded-xl shadow-glow hover:shadow-xl hover:scale-105 transition-all"
-                  >
+                  <Button size="lg" className="text-lg px-12 py-6 bg-accent hover:bg-accent-glow text-accent-foreground font-semibold rounded-xl shadow-glow hover:shadow-xl hover:scale-105 transition-all">
                     Solicitar Orçamento Grátis
                   </Button>
                 </DialogTrigger>
@@ -42,18 +41,11 @@ const CTASection = () => {
                   <div className="space-y-4">
                     <p className="text-muted-foreground">Escolha como prefere entrar em contato conosco:</p>
                     <div className="grid gap-3">
-                      <Button 
-                        onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um orçamento para piscina/spa.', '_blank')}
-                        className="justify-start gap-3"
-                      >
+                      <Button onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um orçamento para piscina/spa.', '_blank')} className="justify-start gap-3">
                         <MessageCircle className="h-4 w-4" />
                         WhatsApp (Mais Rápido)
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => window.location.href = 'tel:+5511999999999'}
-                        className="justify-start gap-3"
-                      >
+                      <Button variant="outline" onClick={() => window.location.href = 'tel:+5511999999999'} className="justify-start gap-3">
                         <Phone className="h-4 w-4" />
                         Ligar Agora
                       </Button>
@@ -64,11 +56,7 @@ const CTASection = () => {
               
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="lg"
-                    className="text-lg px-12 py-6 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold rounded-xl transition-all"
-                  >
+                  <Button variant="outline" size="lg" className="text-lg px-12 py-6 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold rounded-xl transition-all">
                     Falar com Especialista
                   </Button>
                 </DialogTrigger>
@@ -79,18 +67,11 @@ const CTASection = () => {
                   <div className="space-y-4">
                     <p className="text-muted-foreground">Nossa equipe técnica está pronta para te atender:</p>
                     <div className="grid gap-3">
-                      <Button 
-                        onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de falar com um especialista sobre piscinas/spas.', '_blank')}
-                        className="justify-start gap-3"
-                      >
+                      <Button onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de falar com um especialista sobre piscinas/spas.', '_blank')} className="justify-start gap-3">
                         <MessageCircle className="h-4 w-4" />
                         WhatsApp Técnico
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Consulta Técnica'}
-                        className="justify-start gap-3"
-                      >
+                      <Button variant="outline" onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Consulta Técnica'} className="justify-start gap-3">
                         <Mail className="h-4 w-4" />
                         E-mail Técnico
                       </Button>
@@ -109,11 +90,7 @@ const CTASection = () => {
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">WhatsApp</h3>
               <p className="text-primary-foreground/80 mb-4">Resposta rápida e atendimento personalizado</p>
-              <Button 
-                variant="outline" 
-                className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-                onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de mais informações sobre piscinas e spas.', '_blank')}
-              >
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de mais informações sobre piscinas e spas.', '_blank')}>
                 Chamar no WhatsApp
               </Button>
             </div>
@@ -124,11 +101,7 @@ const CTASection = () => {
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">E-mail</h3>
               <p className="text-primary-foreground/80 mb-4">Envie sua dúvida ou solicite informações</p>
-              <Button 
-                variant="outline" 
-                className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-                onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Informações sobre produtos'}
-              >
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => window.location.href = 'mailto:exclusive@piscinas.com?subject=Informações sobre produtos'}>
                 Enviar E-mail
               </Button>
             </div>
@@ -139,11 +112,7 @@ const CTASection = () => {
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">Telefone</h3>
               <p className="text-primary-foreground/80 mb-4">Ligue e fale diretamente com nossa equipe</p>
-              <Button 
-                variant="outline" 
-                className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-                onClick={() => window.location.href = 'tel:+5511999999999'}
-              >
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => window.location.href = 'tel:+5511999999999'}>
                 Ligar Agora
               </Button>
             </div>
@@ -168,8 +137,6 @@ const CTASection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CTASection;

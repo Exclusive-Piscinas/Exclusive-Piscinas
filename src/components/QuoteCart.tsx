@@ -126,7 +126,7 @@ const QuoteCart = ({
   };
   return <Sheet>
       <SheetTrigger asChild>
-        <Button className="btn-primary fixed bottom-6 right-6 z-50 rounded-full p-4 shadow-elegant py-[60px] px-[18px]">
+        <Button className="btn-primary fixed bottom-6 right-6 z-50 rounded-full p-4 shadow-elegant my-[80px] px-[16px] py-[24px] text-green-50 text-base bg-slate-600 hover:bg-slate-500">
           <ShoppingCart className="h-6 w-6" />
           {cartItems.length > 0 && <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
               {cartItems.length}
