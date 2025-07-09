@@ -61,7 +61,7 @@ const Hero = () => {
         <div className="max-w-4xl">
           {/* Animated Logo */}
           <div className="mb-8 animate-float">
-            <img src="/src/assets/logo.svg" alt="Logo Exclusive Piscinas" className="h-40 w-auto mx-auto" />
+            <img src="/logo.svg" alt="Logo Exclusive Piscinas" className="h-40 w-auto mx-auto" />
           </div>
 
           {/* Dynamic Content */}

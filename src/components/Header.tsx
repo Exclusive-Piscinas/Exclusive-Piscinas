@@ -38,7 +38,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img src="/src/assets/logo.svg" alt="Logo Exclusive Piscinas" className="h-20 w-auto" />
+            <img src="/logo.svg" alt="Logo Exclusive Piscinas" className="h-20 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
