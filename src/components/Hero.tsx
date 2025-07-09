@@ -61,19 +61,7 @@ const Hero = () => {
         <div className="max-w-4xl">
           {/* Animated Logo */}
           <div className="mb-8 animate-float">
-            <div className="flex items-center space-x-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
-                <span className="text-3xl font-bold text-primary-foreground">E</span>
-              </div>
-              <div>
-                <h1 className="text-4xl md:text-5xl font-bold">
-                  <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-                    Exclusive
-                  </span>
-                </h1>
-                <p className="text-muted-foreground text-lg">Premium Pools & Spas</p>
-              </div>
-            </div>
+            <img src="/src/assets/logo.svg" alt="Logo Exclusive Piscinas" className="h-40 w-auto mx-auto" />
           </div>
 
           {/* Dynamic Content */}

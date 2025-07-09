@@ -38,19 +38,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center animate-pulse-glow">
-                <span className="text-2xl font-bold text-primary-foreground">E</span>
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-2xl font-bold">
-                <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-                  Exclusive
-                </span>
-              </h1>
-              <p className="text-xs text-muted-foreground -mt-1">Premium Pools & Spas</p>
-            </div>
+            <img src="/src/assets/logo.svg" alt="Logo Exclusive Piscinas" className="h-20 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
