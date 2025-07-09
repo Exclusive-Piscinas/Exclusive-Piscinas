@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, FileText, Users, Settings, LogOut, FileImage, Quote } from 'lucide-react';
+import { LayoutDashboard, Package, FileText, Users, Settings, LogOut, FileImage, Quote, Wrench } from 'lucide-react';
 const sidebarItems = [{
   title: "Dashboard",
   url: "/admin",
@@ -18,6 +18,10 @@ const sidebarItems = [{
   title: "Produtos",
   url: "/admin/products",
   icon: Package
+}, {
+  title: "Acessórios",
+  url: "/admin/accessories",
+  icon: Wrench
 }, {
   title: "Categorias",
   url: "/admin/categories",

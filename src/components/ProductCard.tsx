@@ -1,4 +1,10 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Eye, ShoppingCart, Star } from 'lucide-react';
+import { ProductDetailModal } from '@/components/ProductDetailModal';
+import LazyImage from '@/components/LazyImage';
+import { Product } from '@/hooks/useProducts';
 
 interface ProductCardProps {
   id: string;
@@ -13,7 +19,7 @@ interface ProductCardProps {
     name: string;
     slug: string;
   };
-  onAddToCart?: () => void;
+  onAddToCart?: (product: Product, accessories?: any[]) => void;
 }
 
 const ProductCard = ({ 
@@ -22,16 +28,48 @@ const ProductCard = ({
   description, 
   short_description,
   price, 
-  main_image, 
+  main_image,
+  images,
   features, 
   category,
   onAddToCart 
 }: ProductCardProps) => {
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  
+  const product: Product = {
+    id,
+    name,
+    description,
+    short_description,
+    price,
+    sale_price: null,
+    main_image,
+    images,
+    features,
+    category,
+    category_id: category?.slug || '',
+    slug: '',
+    active: true,
+    featured: false,
+    specifications: null,
+    stock_status: 'in_stock',
+    meta_title: null,
+    meta_description: null,
+    created_at: '',
+    updated_at: '',
+  };
+
+  const handleAddToCart = (productData: Product, accessories: any[] = []) => {
+    if (onAddToCart) {
+      onAddToCart(productData, accessories);
+    }
+    setShowDetailModal(false);
+  };
   return (
     <div className="card-premium group">
       {/* Image Container */}
       <div className="relative overflow-hidden">
-        <img
+        <LazyImage
           src={main_image || '/placeholder.svg'}
           alt={name}
           className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
@@ -59,8 +97,9 @@ const ProductCard = ({
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <Button 
             className="btn-primary"
-            onClick={() => window.location.href = `/produto/${id}`}
+            onClick={() => setShowDetailModal(true)}
           >
+            <Eye className="w-4 h-4 mr-2" />
             Ver Detalhes
           </Button>
         </div>
@@ -96,12 +135,28 @@ const ProductCard = ({
           <Button 
             variant="outline" 
             className="btn-outline flex-1"
-            onClick={onAddToCart}
+            onClick={() => setShowDetailModal(true)}
           >
-            Adicionar ao Orçamento
+            <Eye className="w-4 h-4 mr-2" />
+            Ver Detalhes
+          </Button>
+          <Button 
+            className="btn-primary flex-1"
+            onClick={() => handleAddToCart(product)}
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Adicionar
           </Button>
         </div>
       </div>
+
+      {/* Detail Modal */}
+      <ProductDetailModal
+        product={product}
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        onAddToCart={handleAddToCart}
+      />
     </div>
   );
 };

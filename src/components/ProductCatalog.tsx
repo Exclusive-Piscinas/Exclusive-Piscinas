@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useProducts } from '@/hooks/useProducts';
+import { useProducts, Product } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import ProductCard from './ProductCard';
 import QuoteCart from './QuoteCart';
 import { Button } from '@/components/ui/button';
 
 interface CartItem {
-  product: any;
+  product: Product;
   quantity: number;
 }
 
@@ -36,7 +36,7 @@ const ProductCatalog = () => {
     ? products.filter(product => product.category_id === selectedCategory)
     : products;
 
-  const addToCart = (product: any) => {
+  const addToCart = (product: Product, accessories: any[] = []) => {
     setCartItems(prev => {
       const existingItem = prev.find(item => item.product.id === product.id);
       if (existingItem) {
@@ -131,7 +131,7 @@ const ProductCatalog = () => {
                 images={product.images}
                 features={product.features}
                 category={product.category}
-                onAddToCart={() => addToCart(product)}
+                onAddToCart={addToCart}
               />
             ))}
           </div>

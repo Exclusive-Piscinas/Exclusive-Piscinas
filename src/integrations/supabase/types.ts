@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      accessories: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           active: boolean | null
@@ -49,6 +85,48 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      product_accessories: {
+        Row: {
+          accessory_id: string
+          created_at: string
+          id: string
+          product_id: string
+          required: boolean | null
+          sort_order: number | null
+        }
+        Insert: {
+          accessory_id: string
+          created_at?: string
+          id?: string
+          product_id: string
+          required?: boolean | null
+          sort_order?: number | null
+        }
+        Update: {
+          accessory_id?: string
+          created_at?: string
+          id?: string
+          product_id?: string
+          required?: boolean | null
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_accessories_accessory_id_fkey"
+            columns: ["accessory_id"]
+            isOneToOne: false
+            referencedRelation: "accessories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_accessories_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -153,6 +231,54 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      quote_accessories: {
+        Row: {
+          accessory_id: string
+          accessory_name: string
+          accessory_price: number
+          created_at: string
+          id: string
+          quantity: number
+          quote_id: string
+          subtotal: number
+        }
+        Insert: {
+          accessory_id: string
+          accessory_name: string
+          accessory_price: number
+          created_at?: string
+          id?: string
+          quantity?: number
+          quote_id: string
+          subtotal: number
+        }
+        Update: {
+          accessory_id?: string
+          accessory_name?: string
+          accessory_price?: number
+          created_at?: string
+          id?: string
+          quantity?: number
+          quote_id?: string
+          subtotal?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_accessories_accessory_id_fkey"
+            columns: ["accessory_id"]
+            isOneToOne: false
+            referencedRelation: "accessories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_accessories_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quote_items: {
         Row: {
