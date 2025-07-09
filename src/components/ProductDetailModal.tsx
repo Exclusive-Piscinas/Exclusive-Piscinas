@@ -237,7 +237,7 @@ export const ProductDetailModal = ({
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-medium text-foreground">Total do Produto:</span>
                   <div className="text-right">
-                    <span className="bg-clip-text text-transparent text-3xl font-bold">
+                    <span className="bg-clip-text text-3xl font-bold text-zinc-50">
                       R$ {totalPrice.toLocaleString('pt-BR')}
                     </span>
                     {selectedAccessories.length > 0 && <p className="text-sm text-muted-foreground">
