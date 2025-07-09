@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { ShoppingCart, Trash2, Plus, Minus, MessageCircle } from 'lucide-react';
 import { useQuotes, CreateQuoteData } from '@/hooks/useQuotes';
 import { useToast } from '@/hooks/use-toast';
+import { useWhatsApp } from '@/hooks/useWhatsApp';
 import { Product } from '@/hooks/useProducts';
 interface CartItem {
   product: Product;
@@ -33,12 +34,9 @@ const QuoteCart = ({
     notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    createQuote
-  } = useQuotes();
-  const {
-    toast
-  } = useToast();
+  const { createQuote } = useQuotes();
+  const { toast } = useToast();
+  const { generateWhatsAppLink, whatsappNumber } = useWhatsApp();
   const totalAmount = cartItems.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
   const handleSubmitQuote = async () => {
     if (cartItems.length === 0) {
@@ -88,7 +86,8 @@ const QuoteCart = ({
 
       // Generate WhatsApp message
       const whatsappMessage = generateWhatsAppMessage(data, cartItems, customerData);
-      const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(whatsappMessage)}`;
+      const whatsappUrl = generateWhatsAppLink(whatsappMessage);
+      
       toast({
         title: "Orçamento enviado com sucesso!",
         description: "Você será redirecionado para o WhatsApp para finalizar o contato."
