@@ -119,7 +119,7 @@ export const ProductDetailModal = ({
                   </Badge>}
               </div>
               
-              <div className="flex items-center gap-4 p-4 bg-gradient-dark rounded-xl border border-border/30">
+              <div className="flex items-center gap-4 p-4 bg-gradient-dark rounded-xl border border-border/30 bg-gray-700">
                 <div className="flex flex-col">
                   <span className="text-sm text-muted-foreground">Preço</span>
                   <span className="text-4xl font-bold bg-gradient-accent bg-clip-text text-gray-50">
