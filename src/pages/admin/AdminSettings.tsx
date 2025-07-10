@@ -25,7 +25,7 @@ import {
 
 const AdminSettings = () => {
   const { toast } = useToast();
-  const { content, updateContent } = useSiteContent();
+  const { content, updateContent, createContent } = useSiteContent();
   const [loading, setLoading] = useState(false);
   
   // Site Settings
@@ -75,30 +75,200 @@ const AdminSettings = () => {
     newsletter_notifications: false,
   });
 
-  // Load WhatsApp number from database on mount
+  // Load settings from database on mount
   useEffect(() => {
+    loadSettingsFromDatabase();
+  }, [content]);
+
+  const loadSettingsFromDatabase = () => {
+    // Load site settings
+    const siteNameContent = content.find(item => item.key === 'site_name');
+    const siteDescContent = content.find(item => item.key === 'site_description');
+    const siteUrlContent = content.find(item => item.key === 'site_url');
+    const logoUrlContent = content.find(item => item.key === 'logo_url');
+    const faviconUrlContent = content.find(item => item.key === 'favicon_url');
+    const maintenanceModeContent = content.find(item => item.key === 'maintenance_mode');
+
+    if (siteNameContent?.content) {
+      setSiteSettings(prev => ({ ...prev, site_name: siteNameContent.content }));
+    }
+    if (siteDescContent?.content) {
+      setSiteSettings(prev => ({ ...prev, site_description: siteDescContent.content }));
+    }
+    if (siteUrlContent?.content) {
+      setSiteSettings(prev => ({ ...prev, site_url: siteUrlContent.content }));
+    }
+    if (logoUrlContent?.content) {
+      setSiteSettings(prev => ({ ...prev, logo_url: logoUrlContent.content }));
+    }
+    if (faviconUrlContent?.content) {
+      setSiteSettings(prev => ({ ...prev, favicon_url: faviconUrlContent.content }));
+    }
+    if (maintenanceModeContent?.content) {
+      setSiteSettings(prev => ({ ...prev, maintenance_mode: maintenanceModeContent.content === 'true' }));
+    }
+
+    // Load contact settings
+    const emailContent = content.find(item => item.key === 'contact_email');
+    const phoneContent = content.find(item => item.key === 'contact_phone');
     const whatsappContent = content.find(item => item.key === 'whatsapp_number');
+    const addressContent = content.find(item => item.key === 'contact_address');
+    const businessHoursContent = content.find(item => item.key === 'business_hours');
+    const googleMapsContent = content.find(item => item.key === 'google_maps_embed');
+
+    if (emailContent?.content) {
+      setContactSettings(prev => ({ ...prev, email: emailContent.content }));
+    }
+    if (phoneContent?.content) {
+      setContactSettings(prev => ({ ...prev, phone: phoneContent.content }));
+    }
     if (whatsappContent?.content) {
       setContactSettings(prev => ({ ...prev, whatsapp: whatsappContent.content }));
     }
-  }, [content]);
+    if (addressContent?.content) {
+      setContactSettings(prev => ({ ...prev, address: addressContent.content }));
+    }
+    if (businessHoursContent?.content) {
+      setContactSettings(prev => ({ ...prev, business_hours: businessHoursContent.content }));
+    }
+    if (googleMapsContent?.content) {
+      setContactSettings(prev => ({ ...prev, google_maps_embed: googleMapsContent.content }));
+    }
+
+    // Load social settings
+    const facebookContent = content.find(item => item.key === 'social_facebook');
+    const instagramContent = content.find(item => item.key === 'social_instagram');
+    const youtubeContent = content.find(item => item.key === 'social_youtube');
+    const linkedinContent = content.find(item => item.key === 'social_linkedin');
+    const twitterContent = content.find(item => item.key === 'social_twitter');
+
+    if (facebookContent?.content) {
+      setSocialSettings(prev => ({ ...prev, facebook: facebookContent.content }));
+    }
+    if (instagramContent?.content) {
+      setSocialSettings(prev => ({ ...prev, instagram: instagramContent.content }));
+    }
+    if (youtubeContent?.content) {
+      setSocialSettings(prev => ({ ...prev, youtube: youtubeContent.content }));
+    }
+    if (linkedinContent?.content) {
+      setSocialSettings(prev => ({ ...prev, linkedin: linkedinContent.content }));
+    }
+    if (twitterContent?.content) {
+      setSocialSettings(prev => ({ ...prev, twitter: twitterContent.content }));
+    }
+
+    // Load SEO settings
+    const metaTitleContent = content.find(item => item.key === 'seo_meta_title');
+    const metaDescContent = content.find(item => item.key === 'seo_meta_description');
+    const metaKeywordsContent = content.find(item => item.key === 'seo_meta_keywords');
+    const googleAnalyticsContent = content.find(item => item.key === 'google_analytics');
+    const googleTagManagerContent = content.find(item => item.key === 'google_tag_manager');
+    const facebookPixelContent = content.find(item => item.key === 'facebook_pixel');
+
+    if (metaTitleContent?.content) {
+      setSeoSettings(prev => ({ ...prev, meta_title: metaTitleContent.content }));
+    }
+    if (metaDescContent?.content) {
+      setSeoSettings(prev => ({ ...prev, meta_description: metaDescContent.content }));
+    }
+    if (metaKeywordsContent?.content) {
+      setSeoSettings(prev => ({ ...prev, meta_keywords: metaKeywordsContent.content }));
+    }
+    if (googleAnalyticsContent?.content) {
+      setSeoSettings(prev => ({ ...prev, google_analytics: googleAnalyticsContent.content }));
+    }
+    if (googleTagManagerContent?.content) {
+      setSeoSettings(prev => ({ ...prev, google_tag_manager: googleTagManagerContent.content }));
+    }
+    if (facebookPixelContent?.content) {
+      setSeoSettings(prev => ({ ...prev, facebook_pixel: facebookPixelContent.content }));
+    }
+
+    // Load notification settings
+    const emailNotificationsContent = content.find(item => item.key === 'notifications_email');
+    const quoteNotificationsContent = content.find(item => item.key === 'notifications_quote');
+    const contactNotificationsContent = content.find(item => item.key === 'notifications_contact');
+    const newsletterNotificationsContent = content.find(item => item.key === 'notifications_newsletter');
+
+    if (emailNotificationsContent?.content) {
+      setNotificationSettings(prev => ({ ...prev, email_notifications: emailNotificationsContent.content === 'true' }));
+    }
+    if (quoteNotificationsContent?.content) {
+      setNotificationSettings(prev => ({ ...prev, quote_notifications: quoteNotificationsContent.content === 'true' }));
+    }
+    if (contactNotificationsContent?.content) {
+      setNotificationSettings(prev => ({ ...prev, contact_notifications: contactNotificationsContent.content === 'true' }));
+    }
+    if (newsletterNotificationsContent?.content) {
+      setNotificationSettings(prev => ({ ...prev, newsletter_notifications: newsletterNotificationsContent.content === 'true' }));
+    }
+  };
+
+  const saveOrUpdateSetting = async (key: string, value: string, title?: string) => {
+    const existingContent = content.find(item => item.key === key);
+    
+    if (existingContent) {
+      await updateContent(existingContent.id, {
+        ...existingContent,
+        content: value,
+      });
+    } else {
+      await createContent({
+        key,
+        title: title || key,
+        content: value,
+        active: true,
+      });
+    }
+  };
 
   const handleSaveSettings = async (section: string) => {
     setLoading(true);
     try {
-      // Save WhatsApp number to site_content when saving contact settings
-      if (section === 'contato') {
-        const whatsappContent = content.find(item => item.key === 'whatsapp_number');
-        if (whatsappContent) {
-          await updateContent(whatsappContent.id, {
-            ...whatsappContent,
-            content: contactSettings.whatsapp,
-          });
-        }
+      if (section === 'site') {
+        await Promise.all([
+          saveOrUpdateSetting('site_name', siteSettings.site_name, 'Nome do Site'),
+          saveOrUpdateSetting('site_description', siteSettings.site_description, 'Descrição do Site'),
+          saveOrUpdateSetting('site_url', siteSettings.site_url, 'URL do Site'),
+          saveOrUpdateSetting('logo_url', siteSettings.logo_url, 'URL do Logo'),
+          saveOrUpdateSetting('favicon_url', siteSettings.favicon_url, 'URL do Favicon'),
+          saveOrUpdateSetting('maintenance_mode', siteSettings.maintenance_mode.toString(), 'Modo de Manutenção'),
+        ]);
+      } else if (section === 'contato') {
+        await Promise.all([
+          saveOrUpdateSetting('contact_email', contactSettings.email, 'E-mail de Contato'),
+          saveOrUpdateSetting('contact_phone', contactSettings.phone, 'Telefone de Contato'),
+          saveOrUpdateSetting('whatsapp_number', contactSettings.whatsapp, 'Número do WhatsApp'),
+          saveOrUpdateSetting('contact_address', contactSettings.address, 'Endereço'),
+          saveOrUpdateSetting('business_hours', contactSettings.business_hours, 'Horário de Funcionamento'),
+          saveOrUpdateSetting('google_maps_embed', contactSettings.google_maps_embed, 'Google Maps Embed'),
+        ]);
+      } else if (section === 'redes sociais') {
+        await Promise.all([
+          saveOrUpdateSetting('social_facebook', socialSettings.facebook, 'Facebook'),
+          saveOrUpdateSetting('social_instagram', socialSettings.instagram, 'Instagram'),
+          saveOrUpdateSetting('social_youtube', socialSettings.youtube, 'YouTube'),
+          saveOrUpdateSetting('social_linkedin', socialSettings.linkedin, 'LinkedIn'),
+          saveOrUpdateSetting('social_twitter', socialSettings.twitter, 'Twitter'),
+        ]);
+      } else if (section === 'SEO') {
+        await Promise.all([
+          saveOrUpdateSetting('seo_meta_title', seoSettings.meta_title, 'Meta Título'),
+          saveOrUpdateSetting('seo_meta_description', seoSettings.meta_description, 'Meta Descrição'),
+          saveOrUpdateSetting('seo_meta_keywords', seoSettings.meta_keywords, 'Meta Palavras-chave'),
+          saveOrUpdateSetting('google_analytics', seoSettings.google_analytics, 'Google Analytics'),
+          saveOrUpdateSetting('google_tag_manager', seoSettings.google_tag_manager, 'Google Tag Manager'),
+          saveOrUpdateSetting('facebook_pixel', seoSettings.facebook_pixel, 'Facebook Pixel'),
+        ]);
+      } else if (section === 'notificações') {
+        await Promise.all([
+          saveOrUpdateSetting('notifications_email', notificationSettings.email_notifications.toString(), 'Notificações por E-mail'),
+          saveOrUpdateSetting('notifications_quote', notificationSettings.quote_notifications.toString(), 'Notificações de Orçamentos'),
+          saveOrUpdateSetting('notifications_contact', notificationSettings.contact_notifications.toString(), 'Notificações de Contato'),
+          saveOrUpdateSetting('notifications_newsletter', notificationSettings.newsletter_notifications.toString(), 'Newsletter'),
+        ]);
       }
-      
-      // Simulate other settings save
-      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Configurações salvas!",
@@ -604,3 +774,4 @@ const AdminSettings = () => {
 };
 
 export default AdminSettings;
+
