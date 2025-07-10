@@ -1,73 +1,83 @@
-# Welcome to your Lovable project
+Exclusive Piscinas
 
-## Project info
+Este é o repositório oficial do website da Exclusive Piscinas, uma plataforma online dedicada à apresentação e comercialização de piscinas, spas e banheiras de luxo. O objetivo principal deste site é fornecer aos usuários finais informações detalhadas sobre os produtos e serviços oferecidos pela empresa, bem como facilitar o contato para orçamentos e projetos personalizados.
 
-**URL**: https://lovable.dev/projects/acc27405-0037-4c92-a2db-bbf296496fc1
+Como Usar
 
-## How can I edit this code?
+O website da Exclusive Piscinas foi projetado para ser intuitivo e fácil de navegar para usuários finais. Abaixo estão as principais funcionalidades e como utilizá-las:
 
-There are several ways of editing your application.
+•
+Navegação: Utilize o menu de navegação superior para acessar as diferentes seções do site, como 'Piscinas', 'Spas', 'Banheiras', 'Projetos', 'Sobre Nós' e 'Contato'.
 
-**Use Lovable**
+•
+Catálogo de Produtos: Explore as categorias de produtos para visualizar os modelos disponíveis. Cada produto possui uma página dedicada com descrições, especificações e, em alguns casos, galerias de imagens.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/acc27405-0037-4c92-a2db-bbf296496fc1) and start prompting.
+•
+Solicitação de Orçamento/Contato: Para solicitar um orçamento ou entrar em contato com a equipe da Exclusive Piscinas, utilize o formulário disponível na seção 'Contato'. Preencha os campos obrigatórios e envie sua mensagem. Nossa equipe responderá o mais breve possível.
 
-Changes made via Lovable will be committed automatically to this repo.
+•
+Galeria de Projetos: Na seção 'Projetos', você pode visualizar exemplos de trabalhos realizados pela Exclusive Piscinas, demonstrando a qualidade e a personalização dos nossos serviços.
 
-**Use your preferred IDE**
+Tecnologias
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+O website da Exclusive Piscinas é construído com tecnologias modernas para garantir uma experiência de usuário robusta e eficiente. As principais tecnologias utilizadas incluem:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+•
+Frontend:
 
-Follow these steps:
+•
+React: Biblioteca JavaScript para a construção da interface de usuário dinâmica e reativa.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+•
+TypeScript: Linguagem que adiciona tipagem estática ao JavaScript, melhorando a manutenibilidade e a detecção de erros.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+•
+Vite: Ferramenta de build rápida para desenvolvimento frontend.
 
-# Step 3: Install the necessary dependencies.
-npm i
+•
+Tailwind CSS: Framework CSS utilitário para estilização responsiva e personalizável.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+•
+Shadcn/ui: Componentes de UI reutilizáveis e acessíveis, construídos sobre Radix UI e Tailwind CSS.
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
 
-**Use GitHub Codespaces**
+•
+Backend (Integração):
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+•
+Supabase: Plataforma de código aberto que oferece funcionalidades de banco de dados (PostgreSQL), autenticação e armazenamento, utilizada para gerenciar dados e interações do site.
 
-## What technologies are used for this project?
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+•
+Outras Bibliotecas e Ferramentas:
 
-## How can I deploy this project?
+•
+React Router DOM: Para gerenciamento de rotas na aplicação.
 
-Simply open [Lovable](https://lovable.dev/projects/acc27405-0037-4c92-a2db-bbf296496fc1) and click on Share -> Publish.
+•
+Zod: Para validação de esquemas de dados.
 
-## Can I connect a custom domain to my Lovable project?
+•
+React Hook Form: Para gerenciamento de formulários.
 
-Yes, you can!
+•
+Lucide React: Coleção de ícones.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+•
+Embla Carousel React: Para carrosséis de imagens.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+•
+React Query: Para gerenciamento de estado assíncrono e cache de dados.
+
+
+
+Licença
+
+Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE na raiz do repositório para mais detalhes.
+
+Autor
+
+DiegowVM-dev
+
