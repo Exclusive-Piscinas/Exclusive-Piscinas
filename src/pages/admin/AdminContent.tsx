@@ -194,8 +194,11 @@ const AdminContent = () => {
               className="font-mono text-sm"
             />
           ) : (
-            <Select value={formData.key} onValueChange={(value) => setFormData(prev => ({ ...prev, key: value }))}>
-              <SelectTrigger>
+            <Select
+              value={formData.key}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, key: value }))}
+            >
+              <SelectTrigger autoFocus>
                 <SelectValue placeholder="Selecione uma chave" />
               </SelectTrigger>
               <SelectContent>
@@ -208,7 +211,7 @@ const AdminContent = () => {
             </Select>
           )}
         </div>
-
+  
         <div className="space-y-2">
           <Label htmlFor="title">Título</Label>
           <Input
@@ -216,10 +219,11 @@ const AdminContent = () => {
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Título amigável do conteúdo"
+            autoFocus={isEdit} // autoFocus somente se for edição
           />
         </div>
       </div>
-
+  
       <div className="space-y-2">
         <Label>Conteúdo</Label>
         <RichTextEditor
@@ -228,7 +232,7 @@ const AdminContent = () => {
           placeholder="Digite o conteúdo aqui..."
         />
       </div>
-
+  
       <div className="space-y-2">
         <Label>Imagem</Label>
         <ImageUploader
@@ -238,7 +242,7 @@ const AdminContent = () => {
           folder="site-content"
         />
       </div>
-
+  
       <div className="space-y-2">
         <Label htmlFor="settings">Configurações (JSON)</Label>
         <Textarea
@@ -250,7 +254,7 @@ const AdminContent = () => {
           className="font-mono text-sm"
         />
       </div>
-
+  
       <div className="flex items-center space-x-2">
         <Switch
           id="active"
