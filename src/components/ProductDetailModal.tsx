@@ -92,7 +92,7 @@ export const ProductDetailModal = ({
         <DialogContent className="max-w-7xl max-h-[95vh] overflow-y-auto bg-background border-border/30 shadow-elegant rounded-3xl p-0">
           {/* Enhanced Header with original color scheme */}
           <div className="relative bg-gradient-primary p-8 rounded-t-3xl border-b border-border/30">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary to-primary-glow/80 rounded-t-3xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary to-primary-glow/80 rounded-t-3xl bg-slate-900"></div>
             <div className="relative z-10">
               <DialogHeader className="space-y-6">
                 <div className="flex items-start justify-between">
