@@ -21,7 +21,7 @@ const WhatsAppFloat = () => {
   const handleClick = () => {
     openWhatsApp(getContextualMessage());
   };
-  return <Button onClick={handleClick} size="icon" className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-primary shadow-glow hover:scale-110 transition-all duration-300 text-black/[0.47]">
+  return <Button onClick={handleClick} size="icon" className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-primary shadow-glow hover:scale-110 transition-all duration-300 text-lime-600">
       <MessageCircle className="h-6 w-6 text-primary-foreground" />
     </Button>;
 };
