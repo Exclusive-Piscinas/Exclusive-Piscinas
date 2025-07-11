@@ -179,7 +179,7 @@ export const ProductDetailModal = ({
                 <div className="bg-gradient-card p-8 rounded-2xl border border-border/30 shadow-elegant">
                   <div className="flex items-center justify-between">
                     <div className="space-y-2">
-                      <span className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Preço do Produto</span>
+                      <span className="text-sm text-muted-foreground font-medium uppercase tracking-wide">VALOR</span>
                       <div className="flex items-baseline gap-4">
                         <span className="text-5xl font-bold bg-clip-text text-slate-50">
                           R$ {(product.price || 0).toLocaleString('pt-BR')}
@@ -192,7 +192,7 @@ export const ProductDetailModal = ({
                     <div className="text-right space-y-2">
                       <div className="flex items-center gap-2 text-accent">
                         <Shield className="w-5 h-5" />
-                        <span className="text-sm font-semibold">Garantia 5 anos</span>
+                        <span className="text-sm font-semibold">Garantia 15 anos</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Award className="w-4 h-4" />
@@ -315,7 +315,7 @@ export const ProductDetailModal = ({
                 <div className="bg-gradient-primary p-8 rounded-2xl shadow-elegant border border-primary/30">
                   <div className="space-y-6">
                     <div className="flex items-center justify-between text-primary-foreground">
-                      <span className="text-xl font-semibold">Total do Produto:</span>
+                      <span className="text-xl font-semibold">Valor total:</span>
                       <div className="text-right">
                         <span className="text-4xl font-bold">
                           R$ {totalPrice.toLocaleString('pt-BR')}
