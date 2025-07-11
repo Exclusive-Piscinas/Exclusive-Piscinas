@@ -1,48 +1,68 @@
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
-  const footerSections = [
-    {
-      title: "Produtos",
-      links: [
-        { name: "Piscinas Premium", href: "#piscinas" },
-        { name: "Spas & Hidros", href: "#spas" },
-        { name: "Banheiras Luxury", href: "#banheiras" },
-        { name: "Acessórios", href: "#acessorios" },
-      ]
-    },
-    {
-      title: "Serviços",
-      links: [
-        { name: "Instalação Completa", href: "#instalacao" },
-        { name: "Projetos Personalizados", href: "#projetos" },
-        { name: "Manutenção", href: "#manutencao" },
-        { name: "Consultoria", href: "#consultoria" },
-      ]
-    },
-    {
-      title: "Empresa",
-      links: [
-        { name: "Sobre Nós", href: "#sobre" },
-        { name: "Portfolio", href: "#portfolio" },
-        { name: "Depoimentos", href: "#depoimentos" },
-        { name: "Blog", href: "#blog" },
-      ]
-    },
-    {
-      title: "Contato",
-      id: "contato",
-      links: [
-        { name: "WhatsApp", href: "https://wa.me/5511999999999" },
-        { name: "E-mail", href: "mailto:contato@exclusive.com.br" },
-        { name: "Telefone", href: "tel:+5511999999999" },
-        { name: "Localização", href: "#localizacao" },
-      ]
-    }
-  ];
-
-  return (
-    <footer className="bg-gradient-dark border-t border-border/50">
+  const footerSections = [{
+    title: "Produtos",
+    links: [{
+      name: "Piscinas Premium",
+      href: "#piscinas"
+    }, {
+      name: "Spas & Hidros",
+      href: "#spas"
+    }, {
+      name: "Banheiras Luxury",
+      href: "#banheiras"
+    }, {
+      name: "Acessórios",
+      href: "#acessorios"
+    }]
+  }, {
+    title: "Serviços",
+    links: [{
+      name: "Instalação Completa",
+      href: "#instalacao"
+    }, {
+      name: "Projetos Personalizados",
+      href: "#projetos"
+    }, {
+      name: "Manutenção",
+      href: "#manutencao"
+    }, {
+      name: "Consultoria",
+      href: "#consultoria"
+    }]
+  }, {
+    title: "Empresa",
+    links: [{
+      name: "Sobre Nós",
+      href: "#sobre"
+    }, {
+      name: "Portfolio",
+      href: "#portfolio"
+    }, {
+      name: "Depoimentos",
+      href: "#depoimentos"
+    }, {
+      name: "Blog",
+      href: "#blog"
+    }]
+  }, {
+    title: "Contato",
+    id: "contato",
+    links: [{
+      name: "WhatsApp",
+      href: "https://wa.me/5511999999999"
+    }, {
+      name: "E-mail",
+      href: "mailto:contato@exclusive.com.br"
+    }, {
+      name: "Telefone",
+      href: "tel:+5511999999999"
+    }, {
+      name: "Localização",
+      href: "#localizacao"
+    }]
+  }];
+  return <footer className="bg-gradient-dark border-t border-border/50">
       {/* Main Footer Content */}
       <div className="container-custom section-padding">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -54,11 +74,10 @@ const Footer = () => {
               </div>
               <div>
                 <h3 className="text-xl font-bold">
-                  <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-                    Exclusive
-                  </span>
+                  <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">Exclusive
+Piscinas</span>
                 </h3>
-                <p className="text-xs text-muted-foreground">Premium Pools & Spas</p>
+                
               </div>
             </div>
             <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -79,25 +98,18 @@ const Footer = () => {
           </div>
 
           {/* Footer Sections */}
-          {footerSections.map((section) => (
-            <div key={section.title} id={section.id || undefined}>
+          {footerSections.map(section => <div key={section.title} id={section.id || undefined}>
               <h4 className="text-lg font-semibold text-foreground mb-4">
                 {section.title}
               </h4>
               <ul className="space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-muted-foreground hover:text-accent transition-colors"
-                    >
+                {section.links.map(link => <li key={link.name}>
+                    <a href={link.href} className="text-muted-foreground hover:text-accent transition-colors">
                       {link.name}
                     </a>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
-            </div>
-          ))}
+            </div>)}
         </div>
 
         {/* Newsletter */}
@@ -110,11 +122,7 @@ const Footer = () => {
               Fique por dentro de lançamentos, promoções e dicas exclusivas.
             </p>
             <div className="flex gap-3">
-              <input
-                type="email"
-                placeholder="Seu melhor e-mail"
-                className="flex-1 px-4 py-3 bg-muted/30 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-              />
+              <input type="email" placeholder="Seu melhor e-mail" className="flex-1 px-4 py-3 bg-muted/30 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent" />
               <button className="px-6 py-3 bg-gradient-primary text-primary-foreground font-medium rounded-xl hover:shadow-glow transition-all">
                 Inscrever
               </button>
@@ -144,8 +152,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
