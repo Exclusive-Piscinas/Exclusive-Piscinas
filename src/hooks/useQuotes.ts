@@ -116,6 +116,21 @@ export const useQuotes = () => {
 
       if (itemsError) throw itemsError;
 
+      // Generate PDF automatically
+      try {
+        const { error: pdfError } = await supabase.functions.invoke('generate-quote-pdf', {
+          body: { quoteId: quote.id }
+        });
+
+        if (pdfError) {
+          console.error('Erro ao gerar PDF:', pdfError);
+          // Don't fail the quote creation if PDF generation fails
+        }
+      } catch (pdfGenerationError) {
+        console.error('PDF generation error:', pdfGenerationError);
+        // PDF generation is optional, don't fail the quote
+      }
+
       toast({
         title: "Orçamento criado com sucesso!",
         description: `Orçamento ${quoteNumber} foi gerado.`,

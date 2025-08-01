@@ -121,6 +121,12 @@ const QuoteCart = ({
     if (customer.notes) {
       message += `\n📝 *Observações:* ${customer.notes}\n`;
     }
+    
+    // Add PDF link if available
+    if (quote.pdf_url) {
+      message += `\n📄 *PDF do Orçamento:* ${quote.pdf_url}\n`;
+    }
+    
     message += `\n✨ Estou interessado(a) neste orçamento e gostaria de mais informações!`;
     return message;
   };

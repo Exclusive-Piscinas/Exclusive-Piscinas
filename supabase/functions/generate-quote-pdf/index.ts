@@ -146,9 +146,8 @@ serve(async (req) => {
       </html>
     `;
 
-    // Convert HTML to PDF (in production, use puppeteer or similar)
-    // For now, return the HTML content as a base64 encoded string
-    const base64Content = btoa(unescape(encodeURIComponent(htmlContent)));
+    // Convert HTML content to bytes for upload
+    const contentBytes = new TextEncoder().encode(htmlContent);
     
     // Generate filename
     const filename = `orcamento-${quote.quote_number}-${Date.now()}.html`;
@@ -157,9 +156,10 @@ serve(async (req) => {
     const { data: uploadData, error: uploadError } = await supabaseClient
       .storage
       .from('quotes')
-      .upload(filename, base64Content, {
+      .upload(filename, contentBytes, {
         contentType: 'text/html',
         cacheControl: '3600',
+        upsert: false
       });
 
     if (uploadError) {
@@ -184,10 +184,14 @@ serve(async (req) => {
 
     console.log('PDF generated successfully:', publicUrl);
 
+    // Log success for monitoring
+    console.log(`PDF generated successfully for quote ${quote.quote_number}:`, publicUrl);
+
     return new Response(
       JSON.stringify({ 
         success: true, 
         pdf_url: publicUrl,
+        quote_number: quote.quote_number,
         message: 'PDF gerado com sucesso'
       }),
       { 

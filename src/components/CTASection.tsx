@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Phone, Mail, MessageCircle } from 'lucide-react';
+import { useWhatsApp } from '@/hooks/useWhatsApp';
 const CTASection = () => {
+  const { openWhatsApp, getDefaultMessages } = useWhatsApp();
   return <section className="section-padding bg-gradient-primary relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
@@ -41,11 +43,11 @@ const CTASection = () => {
                   <div className="space-y-4">
                     <p className="text-muted-foreground">Escolha como prefere entrar em contato conosco:</p>
                     <div className="grid gap-3">
-                      <Button onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um orçamento para piscina/spa.', '_blank')} className="justify-start gap-3">
+                      <Button onClick={() => openWhatsApp(getDefaultMessages.orcamento)} className="justify-start gap-3">
                         <MessageCircle className="h-4 w-4" />
                         WhatsApp (Mais Rápido)
                       </Button>
-                      <Button variant="outline" onClick={() => window.location.href = 'tel:+5511999999999'} className="justify-start gap-3">
+                      <Button variant="outline" onClick={() => openWhatsApp(getDefaultMessages.vendedor)} className="justify-start gap-3">
                         <Phone className="h-4 w-4" />
                         Ligar Agora
                       </Button>
@@ -67,7 +69,7 @@ const CTASection = () => {
                   <div className="space-y-4">
                     <p className="text-muted-foreground">Nossa equipe técnica está pronta para te atender:</p>
                     <div className="grid gap-3">
-                      <Button onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de falar com um especialista sobre piscinas/spas.', '_blank')} className="justify-start gap-3">
+                      <Button onClick={() => openWhatsApp(getDefaultMessages.vendedor)} className="justify-start gap-3">
                         <MessageCircle className="h-4 w-4" />
                         WhatsApp Técnico
                       </Button>
@@ -90,7 +92,7 @@ const CTASection = () => {
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">WhatsApp</h3>
               <p className="text-primary-foreground/80 mb-4">Resposta rápida e atendimento personalizado</p>
-              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de mais informações sobre piscinas e spas.', '_blank')}>
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => openWhatsApp(getDefaultMessages.contato)}>
                 Chamar no WhatsApp
               </Button>
             </div>
@@ -112,7 +114,7 @@ const CTASection = () => {
               </div>
               <h3 className="text-xl font-bold text-primary-foreground mb-2">Telefone</h3>
               <p className="text-primary-foreground/80 mb-4">Ligue e fale diretamente com nossa equipe</p>
-              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => window.location.href = 'tel:+5511999999999'}>
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => openWhatsApp(getDefaultMessages.contato)}>
                 Ligar Agora
               </Button>
             </div>
