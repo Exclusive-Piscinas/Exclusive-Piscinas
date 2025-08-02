@@ -40,6 +40,12 @@ export interface CreateQuoteData {
     product_name: string;
     product_price: number;
     quantity: number;
+    accessories?: {
+      accessory_id: string;
+      accessory_name: string;
+      accessory_price: number;
+      quantity: number;
+    }[];
   }[];
 }
 
@@ -55,7 +61,8 @@ export const useQuotes = () => {
         .from('quotes')
         .select(`
           *,
-          quote_items(*)
+          quote_items(*),
+          quote_accessories(*)
         `)
         .order('created_at', { ascending: false });
 
@@ -77,11 +84,15 @@ export const useQuotes = () => {
       // Generate quote number
       const quoteNumber = `EXC-${Date.now()}`;
       
-      // Calculate total amount
-      const totalAmount = quoteData.items.reduce(
-        (sum, item) => sum + (item.product_price * item.quantity),
-        0
-      );
+      // Calculate total amount including accessories
+      const totalAmount = quoteData.items.reduce((sum, item) => {
+        const itemTotal = item.product_price * item.quantity;
+        const accessoriesTotal = (item.accessories || []).reduce(
+          (accSum, acc) => accSum + (acc.accessory_price * acc.quantity),
+          0
+        );
+        return sum + itemTotal + accessoriesTotal;
+      }, 0);
 
       // Create quote
       const { data: quote, error: quoteError } = await supabase
@@ -115,6 +126,26 @@ export const useQuotes = () => {
         .insert(quoteItems);
 
       if (itemsError) throw itemsError;
+
+      // Create quote accessories for all items
+      const allAccessories = quoteData.items.flatMap(item => 
+        (item.accessories || []).map(accessory => ({
+          quote_id: quote.id,
+          accessory_id: accessory.accessory_id,
+          accessory_name: accessory.accessory_name,
+          accessory_price: accessory.accessory_price,
+          quantity: accessory.quantity,
+          subtotal: accessory.accessory_price * accessory.quantity,
+        }))
+      );
+
+      if (allAccessories.length > 0) {
+        const { error: accessoriesError } = await supabase
+          .from('quote_accessories')
+          .insert(allAccessories);
+
+        if (accessoriesError) throw accessoriesError;
+      }
 
       // Generate PDF automatically
       try {

@@ -5,6 +5,7 @@ import { BasicFields, ContentFields, SEOFields } from '@/components/admin/forms/
 import { ImageUploader } from '@/components/admin/ImageUploader';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
 import { ProductFormData } from '@/hooks/useProductForm';
+import { ProductAccessoriesField } from '@/components/admin/forms/ProductAccessoriesField';
 
 interface Category {
   id: string;
@@ -21,6 +22,7 @@ interface ProductFormProps {
   onRemoveFeature: (index: number) => void;
   generateSlug: (name: string) => string;
   isEdit?: boolean;
+  productId?: string;
 }
 
 export const ProductForm = memo(({
@@ -32,13 +34,15 @@ export const ProductForm = memo(({
   onAddFeature,
   onRemoveFeature,
   generateSlug,
-  isEdit = false
+  isEdit = false,
+  productId
 }: ProductFormProps) => (
   <Tabs defaultValue="basic" className="w-full">
-    <TabsList className="grid w-full grid-cols-4">
+    <TabsList className="grid w-full grid-cols-5">
       <TabsTrigger value="basic">Básico</TabsTrigger>
       <TabsTrigger value="content">Conteúdo</TabsTrigger>
       <TabsTrigger value="images">Imagens</TabsTrigger>
+      <TabsTrigger value="accessories">Acessórios</TabsTrigger>
       <TabsTrigger value="seo">SEO</TabsTrigger>
     </TabsList>
 
@@ -107,6 +111,18 @@ export const ProductForm = memo(({
               ))}
             </SelectContent>
           </Select>
+        </div>
+      )}
+    </TabsContent>
+
+    <TabsContent value="accessories" className="space-y-4">
+      {isEdit && productId ? (
+        <ProductAccessoriesField productId={productId} />
+      ) : (
+        <div className="bg-muted/50 p-8 rounded-lg text-center">
+          <p className="text-muted-foreground">
+            Salve o produto primeiro para gerenciar acessórios
+          </p>
         </div>
       )}
     </TabsContent>

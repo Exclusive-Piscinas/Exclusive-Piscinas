@@ -7,6 +7,12 @@ import { Button } from '@/components/ui/button';
 interface CartItem {
   product: Product;
   quantity: number;
+  accessories?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 }
 const ProductCatalog = () => {
   const {
@@ -35,17 +41,32 @@ const ProductCatalog = () => {
   }, [categories]);
   const filteredProducts = selectedCategory ? products.filter(product => product.category_id === selectedCategory) : products;
   const addToCart = (product: Product, accessories: any[] = []) => {
+    const accessoryData = accessories.map(acc => ({
+      id: acc.id,
+      name: acc.name,
+      price: acc.price || 0,
+      quantity: acc.quantity || 1
+    }));
+
     setCartItems(prev => {
-      const existingItem = prev.find(item => item.product.id === product.id);
+      const existingItem = prev.find(item => 
+        item.product.id === product.id && 
+        JSON.stringify(item.accessories || []) === JSON.stringify(accessoryData)
+      );
+      
       if (existingItem) {
-        return prev.map(item => item.product.id === product.id ? {
-          ...item,
-          quantity: item.quantity + 1
-        } : item);
+        return prev.map(item => 
+          item.product.id === product.id && 
+          JSON.stringify(item.accessories || []) === JSON.stringify(accessoryData)
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
       }
+      
       return [...prev, {
         product,
-        quantity: 1
+        quantity: 1,
+        accessories: accessoryData.length > 0 ? accessoryData : undefined
       }];
     });
   };

@@ -253,61 +253,153 @@ export const ProductDetailModal = ({
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="accessories" className="space-y-4 mt-8">
-                    <div className="bg-gradient-card p-8 rounded-2xl border border-border/30 shadow-card">
-                      {productAccessories.length > 0 ? <div className="space-y-6">
-                          {productAccessories.map(accessory => {
-                        const isSelected = selectedAccessories.some(acc => acc.id === accessory.id);
-                        const selectedAcc = selectedAccessories.find(acc => acc.id === accessory.id);
-                        return <Card key={accessory.id} className={`transition-all duration-300 border-2 hover:shadow-elegant ${isSelected ? 'border-accent shadow-glow bg-gradient-card' : 'border-border/30 hover:border-accent/50 bg-card/30'}`}>
-                                <CardContent className="p-6">
-                                  <div className="flex items-start gap-6">
-                                    <Checkbox checked={isSelected} onCheckedChange={() => toggleAccessory(accessory)} disabled={accessory.required} className="mt-2 data-[state=checked]:bg-accent data-[state=checked]:border-accent w-5 h-5" />
-                                    
-                                    {accessory.image_url && <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border-2 border-border/30 shadow-card">
-                                        <LazyImage src={accessory.image_url} alt={accessory.name} className="w-full h-full object-cover" />
-                                      </div>}
-                                    
-                                    <div className="flex-1 space-y-4">
-                                      <div className="flex items-center gap-3">
-                                        <h4 className="font-bold text-foreground text-xl">{accessory.name}</h4>
-                                        {accessory.required && <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-xs font-semibold">
-                                            Obrigatório
-                                          </Badge>}
-                                      </div>
-                                      
-                                      {accessory.description && <p className="text-muted-foreground leading-relaxed">
-                                          {accessory.description}
-                                        </p>}
-                                      
-                                      <div className="flex items-center justify-between pt-2">
-                                        <span className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent">
-                                          R$ {(accessory.price || 0).toLocaleString('pt-BR')}
-                                        </span>
+                  <TabsContent value="accessories" className="space-y-6 mt-8">
+                    {productAccessories.length > 0 ? (
+                      <div className="space-y-8">
+                        {/* Equipamentos Obrigatórios */}
+                        {productAccessories.filter(acc => acc.required).length > 0 && (
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <Shield className="w-5 h-5 text-destructive" />
+                              <h4 className="text-xl font-bold text-foreground">Equipamentos Obrigatórios</h4>
+                              <Badge className="bg-destructive/20 text-destructive border-destructive/30 px-3 py-1">
+                                Inclusos
+                              </Badge>
+                            </div>
+                            <p className="text-muted-foreground text-sm mb-4">
+                              Estes equipamentos são essenciais e estão incluídos no produto:
+                            </p>
+                            
+                            <div className="space-y-3">
+                              {productAccessories.filter(acc => acc.required).map(accessory => {
+                                const selectedAcc = selectedAccessories.find(acc => acc.id === accessory.id);
+                                return (
+                                  <Card key={accessory.id} className="border-destructive/30 bg-destructive/5">
+                                    <CardContent className="p-4">
+                                      <div className="flex items-center gap-4">
+                                        {accessory.image_url && (
+                                          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-destructive/20">
+                                            <LazyImage src={accessory.image_url} alt={accessory.name} className="w-full h-full object-cover" />
+                                          </div>
+                                        )}
                                         
-                                        {isSelected && <div className="flex items-center gap-3 bg-muted/50 rounded-xl p-3 border border-border/30">
-                                            <Button size="sm" variant="outline" onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) - 1)} disabled={accessory.required || (selectedAcc?.quantity || 1) <= 1} className="w-10 h-10 p-0 hover:bg-accent hover:text-accent-foreground hover:border-accent rounded-lg">
-                                              <Minus className="w-4 h-4" />
-                                            </Button>
-                                            <span className="w-12 text-center font-bold text-foreground text-lg">
-                                              {selectedAcc?.quantity || 1}
-                                            </span>
-                                            <Button size="sm" variant="outline" onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) + 1)} className="w-10 h-10 p-0 hover:bg-accent hover:text-accent-foreground hover:border-accent rounded-lg">
-                                              <Plus className="w-4 h-4" />
-                                            </Button>
-                                          </div>}
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-3">
+                                            <h5 className="font-semibold text-foreground">{accessory.name}</h5>
+                                            <Badge className="bg-destructive/20 text-destructive text-xs">
+                                              ✓ Incluso
+                                            </Badge>
+                                          </div>
+                                          {accessory.description && (
+                                            <p className="text-sm text-muted-foreground mt-1">{accessory.description}</p>
+                                          )}
+                                          <p className="text-sm font-medium text-destructive mt-1">
+                                            R$ {(accessory.price || 0).toLocaleString('pt-BR')} - Qtd: {selectedAcc?.quantity || 1}
+                                          </p>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>;
-                      })}
-                        </div> : <div className="text-center py-20">
-                          <Sparkles className="w-24 h-24 text-muted-foreground mx-auto mb-8" />
-                          <p className="text-muted-foreground text-2xl font-medium">Nenhum acessório disponível para este produto.</p>
-                          <p className="text-muted-foreground/70 text-sm mt-3">Novos acessórios podem ser adicionados em breve.</p>
-                        </div>}
-                    </div>
+                                    </CardContent>
+                                  </Card>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Equipamentos Opcionais */}
+                        {productAccessories.filter(acc => !acc.required).length > 0 && (
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <Settings className="w-5 h-5 text-accent" />
+                              <h4 className="text-xl font-bold text-foreground">Equipamentos Opcionais</h4>
+                              <Badge className="bg-accent/20 text-accent border-accent/30 px-3 py-1">
+                                Personalize
+                              </Badge>
+                            </div>
+                            <p className="text-muted-foreground text-sm mb-4">
+                              Escolha os equipamentos adicionais para personalizar seu produto:
+                            </p>
+                            
+                            <div className="space-y-3">
+                              {productAccessories.filter(acc => !acc.required).map(accessory => {
+                                const isSelected = selectedAccessories.some(acc => acc.id === accessory.id);
+                                const selectedAcc = selectedAccessories.find(acc => acc.id === accessory.id);
+                                
+                                return (
+                                  <Card key={accessory.id} className={`transition-all duration-300 border-2 hover:shadow-elegant ${isSelected ? 'border-accent shadow-glow bg-accent/5' : 'border-border/30 hover:border-accent/50'}`}>
+                                    <CardContent className="p-4">
+                                      <div className="flex items-start gap-4">
+                                        <Checkbox 
+                                          checked={isSelected} 
+                                          onCheckedChange={() => toggleAccessory(accessory)} 
+                                          className="mt-2 data-[state=checked]:bg-accent data-[state=checked]:border-accent w-5 h-5" 
+                                        />
+                                        
+                                        {accessory.image_url && (
+                                          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-border/30">
+                                            <LazyImage src={accessory.image_url} alt={accessory.name} className="w-full h-full object-cover" />
+                                          </div>
+                                        )}
+                                        
+                                        <div className="flex-1 space-y-3">
+                                          <div>
+                                            <h5 className="font-semibold text-foreground text-lg">{accessory.name}</h5>
+                                            {accessory.description && (
+                                              <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
+                                                {accessory.description}
+                                              </p>
+                                            )}
+                                          </div>
+                                          
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-xl font-bold text-accent">
+                                              R$ {(accessory.price || 0).toLocaleString('pt-BR')}
+                                            </span>
+                                            
+                                            {isSelected && (
+                                              <div className="flex items-center gap-3 bg-muted/50 rounded-xl p-3 border border-border/30">
+                                                <Button 
+                                                  size="sm" 
+                                                  variant="outline" 
+                                                  onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) - 1)} 
+                                                  disabled={(selectedAcc?.quantity || 1) <= 1} 
+                                                  className="w-8 h-8 p-0 hover:bg-accent hover:text-accent-foreground rounded-lg"
+                                                >
+                                                  <Minus className="w-4 h-4" />
+                                                </Button>
+                                                <span className="w-8 text-center font-bold text-foreground">
+                                                  {selectedAcc?.quantity || 1}
+                                                </span>
+                                                <Button 
+                                                  size="sm" 
+                                                  variant="outline" 
+                                                  onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) + 1)} 
+                                                  className="w-8 h-8 p-0 hover:bg-accent hover:text-accent-foreground rounded-lg"
+                                                >
+                                                  <Plus className="w-4 h-4" />
+                                                </Button>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-20 bg-gradient-card rounded-2xl border border-border/30">
+                        <Sparkles className="w-24 h-24 text-muted-foreground mx-auto mb-8" />
+                        <p className="text-muted-foreground text-2xl font-medium">Nenhum acessório disponível</p>
+                        <p className="text-muted-foreground/70 text-sm mt-3">
+                          Entre em contato para saber sobre equipamentos disponíveis para este produto.
+                        </p>
+                      </div>
+                    )}
                   </TabsContent>
                 </Tabs>
 

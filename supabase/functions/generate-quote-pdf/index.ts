@@ -13,6 +13,13 @@ interface QuoteItem {
   subtotal: number;
 }
 
+interface QuoteAccessory {
+  accessory_name: string;
+  accessory_price: number;
+  quantity: number;
+  subtotal: number;
+}
+
 interface Quote {
   id: string;
   quote_number: string;
@@ -24,6 +31,7 @@ interface Quote {
   notes: string | null;
   created_at: string;
   quote_items: QuoteItem[];
+  quote_accessories: QuoteAccessory[];
 }
 
 serve(async (req) => {
@@ -46,12 +54,13 @@ serve(async (req) => {
 
     console.log('Generating PDF for quote:', quoteId);
 
-    // Fetch quote data with items
+    // Fetch quote data with items and accessories
     const { data: quote, error: quoteError } = await supabaseClient
       .from('quotes')
       .select(`
         *,
-        quote_items(*)
+        quote_items(*),
+        quote_accessories(*)
       `)
       .eq('id', quoteId)
       .single();
@@ -106,26 +115,57 @@ serve(async (req) => {
           ${quote.customer_address ? `<p><strong>Endereço:</strong> ${quote.customer_address}</p>` : ''}
         </div>
         
-        <table class="items-table">
-          <thead>
-            <tr>
-              <th>Produto</th>
-              <th>Preço Unitário</th>
-              <th>Quantidade</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${quote.quote_items.map((item: QuoteItem) => `
+        <!-- Produtos -->
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #007bff; margin-bottom: 15px;">Produtos</h3>
+          <table class="items-table">
+            <thead>
               <tr>
-                <td>${item.product_name}</td>
-                <td>R$ ${item.product_price.toLocaleString('pt-BR')}</td>
-                <td>${item.quantity}</td>
-                <td>R$ ${item.subtotal.toLocaleString('pt-BR')}</td>
+                <th>Produto</th>
+                <th>Preço Unitário</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${quote.quote_items.map((item: QuoteItem) => `
+                <tr>
+                  <td>${item.product_name}</td>
+                  <td>R$ ${item.product_price.toLocaleString('pt-BR')}</td>
+                  <td>${item.quantity}</td>
+                  <td>R$ ${item.subtotal.toLocaleString('pt-BR')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Acessórios -->
+        ${quote.quote_accessories && quote.quote_accessories.length > 0 ? `
+          <div style="margin-bottom: 30px;">
+            <h3 style="color: #007bff; margin-bottom: 15px;">Acessórios e Equipamentos</h3>
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Acessório</th>
+                  <th>Preço Unitário</th>
+                  <th>Quantidade</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${quote.quote_accessories.map((accessory: QuoteAccessory) => `
+                  <tr>
+                    <td>${accessory.accessory_name}</td>
+                    <td>R$ ${accessory.accessory_price.toLocaleString('pt-BR')}</td>
+                    <td>${accessory.quantity}</td>
+                    <td>R$ ${accessory.subtotal.toLocaleString('pt-BR')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : ''}
         
         <div class="total-section">
           <p class="total-amount">Total: R$ ${(quote.total_amount || 0).toLocaleString('pt-BR')}</p>

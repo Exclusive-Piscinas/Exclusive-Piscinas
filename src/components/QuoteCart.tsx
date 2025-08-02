@@ -14,6 +14,12 @@ import LazyImage from '@/components/LazyImage';
 interface CartItem {
   product: Product;
   quantity: number;
+  accessories?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 }
 interface QuoteCartProps {
   cartItems: CartItem[];
@@ -38,7 +44,14 @@ const QuoteCart = ({
   const { createQuote } = useQuotes();
   const { toast } = useToast();
   const { generateWhatsAppLink, whatsappNumber } = useWhatsApp();
-  const totalAmount = cartItems.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
+  const totalAmount = cartItems.reduce((sum, item) => {
+    const productTotal = (item.product.price || 0) * item.quantity;
+    const accessoriesTotal = (item.accessories || []).reduce(
+      (accSum, acc) => accSum + (acc.price * acc.quantity),
+      0
+    );
+    return sum + productTotal + accessoriesTotal;
+  }, 0);
   const handleSubmitQuote = async () => {
     if (cartItems.length === 0) {
       toast({
@@ -67,7 +80,13 @@ const QuoteCart = ({
         product_id: item.product.id,
         product_name: item.product.name,
         product_price: item.product.price || 0,
-        quantity: item.quantity
+        quantity: item.quantity,
+        accessories: item.accessories?.map(acc => ({
+          accessory_id: acc.id,
+          accessory_name: acc.name,
+          accessory_price: acc.price,
+          quantity: acc.quantity
+        }))
       }))
     };
     const {
@@ -115,7 +134,18 @@ const QuoteCart = ({
       message += `\n• *${item.product.name}*\n`;
       message += `  Quantidade: ${item.quantity}\n`;
       message += `  Valor unitário: R$ ${(item.product.price || 0).toLocaleString('pt-BR')}\n`;
-      message += `  Subtotal: R$ ${((item.product.price || 0) * item.quantity).toLocaleString('pt-BR')}\n`;
+      message += `  Subtotal produto: R$ ${((item.product.price || 0) * item.quantity).toLocaleString('pt-BR')}\n`;
+      
+      if (item.accessories && item.accessories.length > 0) {
+        message += `  📦 *Acessórios inclusos:*\n`;
+        item.accessories.forEach(acc => {
+          message += `    - ${acc.name} (${acc.quantity}x) - R$ ${(acc.price * acc.quantity).toLocaleString('pt-BR')}\n`;
+        });
+      }
+      
+      const itemTotal = (item.product.price || 0) * item.quantity + 
+        (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0);
+      message += `  *Total do item: R$ ${itemTotal.toLocaleString('pt-BR')}*\n`;
     });
     message += `\n💰 *VALOR TOTAL: R$ ${totalAmount.toLocaleString('pt-BR')}*\n`;
     if (customer.notes) {
@@ -230,12 +260,50 @@ const QuoteCart = ({
                             </Button>
                           </div>
                           
+                          {/* Acessórios */}
+                          {item.accessories && item.accessories.length > 0 && (
+                            <div className="space-y-2">
+                              <h5 className="text-sm font-medium text-muted-foreground">Acessórios inclusos:</h5>
+                              <div className="space-y-1">
+                                {item.accessories.map((acc, index) => (
+                                  <div key={index} className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">
+                                      {acc.name} ({acc.quantity}x)
+                                    </span>
+                                    <span className="text-accent">
+                                      R$ {(acc.price * acc.quantity).toLocaleString('pt-BR')}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
                           <div className="pt-2 border-t border-border/20">
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Subtotal:</span>
-                              <span className="font-bold text-foreground">
-                                R$ {((item.product.price || 0) * item.quantity).toLocaleString('pt-BR')}
-                              </span>
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Produto:</span>
+                                <span className="text-foreground">
+                                  R$ {((item.product.price || 0) * item.quantity).toLocaleString('pt-BR')}
+                                </span>
+                              </div>
+                              {item.accessories && item.accessories.length > 0 && (
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Acessórios:</span>
+                                  <span className="text-accent">
+                                    R$ {item.accessories.reduce((sum, acc) => sum + (acc.price * acc.quantity), 0).toLocaleString('pt-BR')}
+                                  </span>
+                                </div>
+                              )}
+                              <div className="flex justify-between items-center pt-1 border-t border-border/10">
+                                <span className="font-medium text-foreground">Subtotal:</span>
+                                <span className="font-bold text-foreground">
+                                  R$ {(
+                                    (item.product.price || 0) * item.quantity + 
+                                    (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0)
+                                  ).toLocaleString('pt-BR')}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -129,6 +129,7 @@ export const ProductDialogs = memo(({
           onRemoveFeature={onRemoveFeature}
           generateSlug={generateSlug}
           isEdit
+          productId={selectedProduct?.id}
         />
         
         <div className="flex justify-end space-x-2 pt-4">
