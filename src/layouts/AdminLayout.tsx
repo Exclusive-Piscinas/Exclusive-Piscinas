@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup,
 import { Button } from '@/components/ui/button';
 import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Package, FileText, Users, Settings, LogOut, FileImage, Quote, Wrench } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 const sidebarItems = [{
   title: "Dashboard",
   url: "/admin",
@@ -124,9 +125,12 @@ export const AdminLayout = () => {
               <h1 className="text-lg font-semibold text-foreground">
                 Painel Administrativo
               </h1>
-              <Button variant="outline" onClick={() => navigate('/')} size="sm">
-                Ver Site
-              </Button>
+              <div className="flex items-center space-x-3">
+                <ThemeToggle />
+                <Button variant="outline" onClick={() => navigate('/')} size="sm">
+                  Ver Site
+                </Button>
+              </div>
             </div>
           </header>
 

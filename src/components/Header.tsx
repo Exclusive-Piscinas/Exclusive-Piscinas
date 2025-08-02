@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWhatsApp } from '@/hooks/useWhatsApp';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -86,8 +87,9 @@ const Header = () => {
             })}
           </nav>
 
-          {/* CTA Button */}
+          {/* CTA Button and Theme Toggle */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             <Button 
               variant="outline" 
               size="sm" 
@@ -168,6 +170,9 @@ const Header = () => {
                 );
               })}
               <div className="pt-4 space-y-3">
+                <div className="flex justify-center pb-2">
+                  <ThemeToggle />
+                </div>
                 <Button 
                   variant="outline" 
                   className="w-full btn-outline"
