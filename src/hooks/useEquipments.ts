@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-export interface Accessory {
+export interface Equipment {
   id: string;
   name: string;
   description: string | null;
@@ -14,12 +14,12 @@ export interface Accessory {
   updated_at: string;
 }
 
-export interface ProductAccessory extends Accessory {
+export interface ProductEquipment extends Equipment {
   required: boolean;
   sort_order: number;
 }
 
-export interface CreateAccessoryData {
+export interface CreateEquipmentData {
   name: string;
   description?: string;
   price?: number;
@@ -28,24 +28,24 @@ export interface CreateAccessoryData {
   active?: boolean;
 }
 
-export const useAccessories = () => {
-  const [accessories, setAccessories] = useState<Accessory[]>([]);
+export const useEquipments = () => {
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchAccessories = async () => {
+  const fetchEquipments = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('accessories')
+        .from('equipments')
         .select('*')
         .order('name');
 
       if (error) throw error;
-      setAccessories(data || []);
+      setEquipments(data || []);
     } catch (error: any) {
       toast({
-        title: "Erro ao carregar acessórios",
+        title: "Erro ao carregar equipamentos",
         description: error.message,
         variant: "destructive",
       });
@@ -54,13 +54,13 @@ export const useAccessories = () => {
     }
   };
 
-  const fetchProductAccessories = async (productId: string): Promise<ProductAccessory[]> => {
+  const fetchProductEquipments = async (productId: string): Promise<ProductEquipment[]> => {
     try {
       const { data, error } = await supabase
-        .from('product_accessories')
+        .from('product_equipments')
         .select(`
           *,
-          accessory:accessories(*)
+          equipment:equipments(*)
         `)
         .eq('product_id', productId)
         .order('sort_order');
@@ -68,13 +68,13 @@ export const useAccessories = () => {
       if (error) throw error;
       
       return (data || []).map(item => ({
-        ...item.accessory,
+        ...item.equipment,
         required: item.required,
         sort_order: item.sort_order,
       }));
     } catch (error: any) {
       toast({
-        title: "Erro ao carregar acessórios do produto",
+        title: "Erro ao carregar equipamentos do produto",
         description: error.message,
         variant: "destructive",
       });
@@ -82,26 +82,26 @@ export const useAccessories = () => {
     }
   };
 
-  const createAccessory = async (accessoryData: CreateAccessoryData) => {
+  const createEquipment = async (equipmentData: CreateEquipmentData) => {
     try {
       const { data, error } = await supabase
-        .from('accessories')
-        .insert([accessoryData])
+        .from('equipments')
+        .insert([equipmentData])
         .select()
         .single();
 
       if (error) throw error;
 
       toast({
-        title: "Acessório criado com sucesso!",
-        description: `${accessoryData.name} foi adicionado.`,
+        title: "Equipamento criado com sucesso!",
+        description: `${equipmentData.name} foi adicionado.`,
       });
 
-      fetchAccessories();
+      fetchEquipments();
       return { data, error: null };
     } catch (error: any) {
       toast({
-        title: "Erro ao criar acessório",
+        title: "Erro ao criar equipamento",
         description: error.message,
         variant: "destructive",
       });
@@ -109,11 +109,11 @@ export const useAccessories = () => {
     }
   };
 
-  const updateAccessory = async (id: string, accessoryData: Partial<CreateAccessoryData>) => {
+  const updateEquipment = async (id: string, equipmentData: Partial<CreateEquipmentData>) => {
     try {
       const { data, error } = await supabase
-        .from('accessories')
-        .update(accessoryData)
+        .from('equipments')
+        .update(equipmentData)
         .eq('id', id)
         .select()
         .single();
@@ -121,14 +121,14 @@ export const useAccessories = () => {
       if (error) throw error;
 
       toast({
-        title: "Acessório atualizado com sucesso!",
+        title: "Equipamento atualizado com sucesso!",
       });
 
-      fetchAccessories();
+      fetchEquipments();
       return { data, error: null };
     } catch (error: any) {
       toast({
-        title: "Erro ao atualizar acessório",
+        title: "Erro ao atualizar equipamento",
         description: error.message,
         variant: "destructive",
       });
@@ -136,24 +136,24 @@ export const useAccessories = () => {
     }
   };
 
-  const deleteAccessory = async (id: string) => {
+  const deleteEquipment = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('accessories')
+        .from('equipments')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
 
       toast({
-        title: "Acessório excluído com sucesso!",
+        title: "Equipamento excluído com sucesso!",
       });
 
-      fetchAccessories();
+      fetchEquipments();
       return { error: null };
     } catch (error: any) {
       toast({
-        title: "Erro ao excluir acessório",
+        title: "Erro ao excluir equipamento",
         description: error.message,
         variant: "destructive",
       });
@@ -161,13 +161,13 @@ export const useAccessories = () => {
     }
   };
 
-  const addAccessoryToProduct = async (productId: string, accessoryId: string, required = false, sortOrder = 0) => {
+  const addEquipmentToProduct = async (productId: string, equipmentId: string, required = false, sortOrder = 0) => {
     try {
       const { error } = await supabase
-        .from('product_accessories')
+        .from('product_equipments')
         .insert([{
           product_id: productId,
-          accessory_id: accessoryId,
+          equipment_id: equipmentId,
           required,
           sort_order: sortOrder,
         }]);
@@ -175,13 +175,13 @@ export const useAccessories = () => {
       if (error) throw error;
 
       toast({
-        title: "Acessório vinculado ao produto!",
+        title: "Equipamento vinculado ao produto!",
       });
 
       return { error: null };
     } catch (error: any) {
       toast({
-        title: "Erro ao vincular acessório",
+        title: "Erro ao vincular equipamento",
         description: error.message,
         variant: "destructive",
       });
@@ -189,24 +189,24 @@ export const useAccessories = () => {
     }
   };
 
-  const removeAccessoryFromProduct = async (productId: string, accessoryId: string) => {
+  const removeEquipmentFromProduct = async (productId: string, equipmentId: string) => {
     try {
       const { error } = await supabase
-        .from('product_accessories')
+        .from('product_equipments')
         .delete()
         .eq('product_id', productId)
-        .eq('accessory_id', accessoryId);
+        .eq('equipment_id', equipmentId);
 
       if (error) throw error;
 
       toast({
-        title: "Acessório removido do produto!",
+        title: "Equipamento removido do produto!",
       });
 
       return { error: null };
     } catch (error: any) {
       toast({
-        title: "Erro ao remover acessório",
+        title: "Erro ao remover equipamento",
         description: error.message,
         variant: "destructive",
       });
@@ -215,18 +215,18 @@ export const useAccessories = () => {
   };
 
   useEffect(() => {
-    fetchAccessories();
+    fetchEquipments();
   }, []);
 
   return {
-    accessories,
+    equipments,
     loading,
-    fetchAccessories,
-    fetchProductAccessories,
-    createAccessory,
-    updateAccessory,
-    deleteAccessory,
-    addAccessoryToProduct,
-    removeAccessoryFromProduct,
+    fetchEquipments,
+    fetchProductEquipments,
+    createEquipment,
+    updateEquipment,
+    deleteEquipment,
+    addEquipmentToProduct,
+    removeEquipmentFromProduct,
   };
 };

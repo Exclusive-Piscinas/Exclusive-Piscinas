@@ -33,7 +33,7 @@ function AppRoutes() {
           <Route index element={<AdminDashboard />} />
           <Route path="content" element={<AdminContent />} />
           <Route path="products" element={<AdminProducts />} />
-          <Route path="accessories" element={<AdminAccessories />} />
+            <Route path="equipments" element={<AdminEquipments />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="quotes" element={<AdminQuotes />} />
           <Route path="settings" element={<AdminSettings />} />

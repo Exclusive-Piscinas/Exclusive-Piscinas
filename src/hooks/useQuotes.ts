@@ -141,7 +141,7 @@ export const useQuotes = () => {
 
       if (allAccessories.length > 0) {
         const { error: accessoriesError } = await supabase
-          .from('quote_accessories')
+          .from('quote_equipments')
           .insert(allAccessories);
 
         if (accessoriesError) throw accessoriesError;
