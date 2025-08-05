@@ -5,6 +5,7 @@ import { BasicFields, ContentFields, SEOFields } from '@/components/admin/forms/
 import { ImageUploader } from '@/components/admin/ImageUploader';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
 import { ProductFormData } from '@/hooks/useProductForm';
+import ProductAccessoriesField from '@/components/admin/forms/ProductAccessoriesField';
 import ProductEquipmentsField from '@/components/admin/forms/ProductEquipmentsField';
 
 interface Category {
@@ -38,10 +39,11 @@ export const ProductForm = memo(({
   productId
 }: ProductFormProps) => (
   <Tabs defaultValue="basic" className="w-full">
-    <TabsList className="grid w-full grid-cols-5">
+    <TabsList className="grid w-full grid-cols-6">
       <TabsTrigger value="basic">Básico</TabsTrigger>
       <TabsTrigger value="content">Conteúdo</TabsTrigger>
       <TabsTrigger value="images">Imagens</TabsTrigger>
+      <TabsTrigger value="accessories">Acessórios</TabsTrigger>
       <TabsTrigger value="equipments">Equipamentos</TabsTrigger>
       <TabsTrigger value="seo">SEO</TabsTrigger>
     </TabsList>
@@ -111,6 +113,18 @@ export const ProductForm = memo(({
               ))}
             </SelectContent>
           </Select>
+        </div>
+      )}
+    </TabsContent>
+
+    <TabsContent value="accessories" className="space-y-4">
+      {isEdit && productId ? (
+        <ProductAccessoriesField productId={productId} />
+      ) : (
+        <div className="bg-muted/50 p-8 rounded-lg text-center">
+          <p className="text-muted-foreground">
+            Salve o produto primeiro para gerenciar acessórios
+          </p>
         </div>
       )}
     </TabsContent>

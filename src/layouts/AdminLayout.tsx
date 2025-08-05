@@ -20,6 +20,10 @@ const sidebarItems = [{
   url: "/admin/products",
   icon: Package
 }, {
+  title: "Acessórios",
+  url: "/admin/accessories",
+  icon: Package
+}, {
   title: "Equipamentos",
   url: "/admin/equipments",
   icon: Wrench
