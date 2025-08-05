@@ -281,4 +281,5 @@ const ProductEquipmentsField = ({ productId }: ProductEquipmentsFieldProps) => {
   );
 };
 
+// Export the component as default
 export default ProductEquipmentsField;
