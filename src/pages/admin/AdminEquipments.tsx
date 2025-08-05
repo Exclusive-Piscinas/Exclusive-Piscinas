@@ -65,30 +65,30 @@ const AdminEquipments = () => {
   // Table columns
   const columns = [
     {
-      accessorKey: 'name',
-      header: 'Nome',
+      key: 'name' as keyof Equipment,
+      label: 'Nome',
     },
     {
-      accessorKey: 'category',
-      header: 'Categoria',
-      cell: ({ row }: any) => {
-        const category = EQUIPMENT_CATEGORIES.find(cat => cat.value === row.original.category);
-        return category ? category.label : row.original.category || '-';
+      key: 'category' as keyof Equipment,
+      label: 'Categoria',
+      render: (value: any, item: Equipment) => {
+        const category = EQUIPMENT_CATEGORIES.find(cat => cat.value === item.category);
+        return category ? category.label : item.category || '-';
       },
     },
     {
-      accessorKey: 'price',
-      header: 'Preço',
-      cell: ({ row }: any) => {
-        return row.original.price ? `R$ ${row.original.price.toFixed(2)}` : '-';
+      key: 'price' as keyof Equipment,
+      label: 'Preço',
+      render: (value: any, item: Equipment) => {
+        return item.price ? `R$ ${item.price.toFixed(2)}` : '-';
       },
     },
     {
-      accessorKey: 'active',
-      header: 'Status',
-      cell: ({ row }: any) => (
-        <Badge variant={row.original.active ? 'default' : 'secondary'}>
-          {row.original.active ? 'Ativo' : 'Inativo'}
+      key: 'active' as keyof Equipment,
+      label: 'Status',
+      render: (value: any, item: Equipment) => (
+        <Badge variant={item.active ? 'default' : 'secondary'}>
+          {item.active ? 'Ativo' : 'Inativo'}
         </Badge>
       ),
     },

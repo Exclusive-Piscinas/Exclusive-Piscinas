@@ -12,7 +12,7 @@ import NotFound from "./pages/NotFound";
 import { AdminLayout } from "./layouts/AdminLayout";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminProducts from "./pages/admin/AdminProducts";
-import AdminAccessories from "./pages/admin/AdminAccessories";
+import AdminEquipments from "./pages/admin/AdminEquipments";
 import AdminCategories from "./pages/admin/AdminCategories";
 import AdminQuotes from "./pages/admin/AdminQuotes";
 import AdminSettings from "./pages/admin/AdminSettings";

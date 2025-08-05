@@ -127,24 +127,24 @@ export const useQuotes = () => {
 
       if (itemsError) throw itemsError;
 
-      // Create quote accessories for all items
-      const allAccessories = quoteData.items.flatMap(item => 
-        (item.accessories || []).map(accessory => ({
+      // Create quote equipments for all items
+      const allEquipments = quoteData.items.flatMap(item => 
+        (item.accessories || []).map(equipment => ({
           quote_id: quote.id,
-          accessory_id: accessory.accessory_id,
-          accessory_name: accessory.accessory_name,
-          accessory_price: accessory.accessory_price,
-          quantity: accessory.quantity,
-          subtotal: accessory.accessory_price * accessory.quantity,
+          equipment_id: equipment.accessory_id,
+          equipment_name: equipment.accessory_name,
+          equipment_price: equipment.accessory_price,
+          quantity: equipment.quantity,
+          subtotal: equipment.accessory_price * equipment.quantity,
         }))
       );
 
-      if (allAccessories.length > 0) {
-        const { error: accessoriesError } = await supabase
+      if (allEquipments.length > 0) {
+        const { error: equipmentsError } = await supabase
           .from('quote_equipments')
-          .insert(allAccessories);
+          .insert(allEquipments);
 
-        if (accessoriesError) throw accessoriesError;
+        if (equipmentsError) throw equipmentsError;
       }
 
       // Generate PDF automatically

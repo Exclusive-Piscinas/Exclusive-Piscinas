@@ -6,17 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Minus, ShoppingCart, Star, Heart, ZoomIn, X, ChevronLeft, ChevronRight, Package, Shield, Award, Sparkles, Eye, Info, Settings } from 'lucide-react';
-import { useAccessories, ProductAccessory } from '@/hooks/useAccessories';
+import { useEquipments, ProductEquipment } from '@/hooks/useEquipments';
 import { Product } from '@/hooks/useProducts';
 import LazyImage from '@/components/LazyImage';
-interface SelectedAccessory extends ProductAccessory {
+interface SelectedEquipment extends ProductEquipment {
   quantity: number;
 }
 interface ProductDetailModalProps {
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
-  onAddToCart: (product: Product, accessories: SelectedAccessory[]) => void;
+  onAddToCart: (product: Product, equipments: SelectedEquipment[]) => void;
 }
 export const ProductDetailModal = ({
   product,
@@ -25,10 +25,10 @@ export const ProductDetailModal = ({
   onAddToCart
 }: ProductDetailModalProps) => {
   const {
-    fetchProductAccessories
-  } = useAccessories();
-  const [productAccessories, setProductAccessories] = useState<ProductAccessory[]>([]);
-  const [selectedAccessories, setSelectedAccessories] = useState<SelectedAccessory[]>([]);
+    fetchProductEquipments
+  } = useEquipments();
+  const [productEquipments, setProductEquipments] = useState<ProductEquipment[]>([]);
+  const [selectedEquipments, setSelectedEquipments] = useState<SelectedEquipment[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isImageZoomed, setIsImageZoomed] = useState(false);
@@ -36,48 +36,48 @@ export const ProductDetailModal = ({
   const allImages = product ? [product.main_image, ...(product.images || [])].filter(Boolean) : [];
   useEffect(() => {
     if (product) {
-      fetchProductAccessories(product.id).then(accessories => {
-        setProductAccessories(accessories);
-        // Auto-select required accessories
-        const requiredAccessories = accessories.filter(acc => acc.required).map(acc => ({
-          ...acc,
+      fetchProductEquipments(product.id).then(equipments => {
+        setProductEquipments(equipments);
+        // Auto-select required equipments
+        const requiredEquipments = equipments.filter(eq => eq.required).map(eq => ({
+          ...eq,
           quantity: 1
         }));
-        setSelectedAccessories(requiredAccessories);
+        setSelectedEquipments(requiredEquipments);
       });
       setCurrentImageIndex(0);
     }
-  }, [product, fetchProductAccessories]);
+  }, [product, fetchProductEquipments]);
   useEffect(() => {
     const productPrice = product?.price || 0;
-    const accessoriesPrice = selectedAccessories.reduce((sum, acc) => sum + (acc.price || 0) * acc.quantity, 0);
-    setTotalPrice(productPrice + accessoriesPrice);
-  }, [product, selectedAccessories]);
-  const toggleAccessory = (accessory: ProductAccessory) => {
-    if (accessory.required) return; // Can't toggle required accessories
+    const equipmentsPrice = selectedEquipments.reduce((sum, eq) => sum + (eq.price || 0) * eq.quantity, 0);
+    setTotalPrice(productPrice + equipmentsPrice);
+  }, [product, selectedEquipments]);
+  const toggleEquipment = (equipment: ProductEquipment) => {
+    if (equipment.required) return; // Can't toggle required equipments
 
-    setSelectedAccessories(prev => {
-      const existing = prev.find(acc => acc.id === accessory.id);
+    setSelectedEquipments(prev => {
+      const existing = prev.find(eq => eq.id === equipment.id);
       if (existing) {
-        return prev.filter(acc => acc.id !== accessory.id);
+        return prev.filter(eq => eq.id !== equipment.id);
       } else {
         return [...prev, {
-          ...accessory,
+          ...equipment,
           quantity: 1
         }];
       }
     });
   };
-  const updateAccessoryQuantity = (accessoryId: string, quantity: number) => {
+  const updateEquipmentQuantity = (equipmentId: string, quantity: number) => {
     if (quantity < 1) return;
-    setSelectedAccessories(prev => prev.map(acc => acc.id === accessoryId ? {
-      ...acc,
+    setSelectedEquipments(prev => prev.map(eq => eq.id === equipmentId ? {
+      ...eq,
       quantity
-    } : acc));
+    } : eq));
   };
   const handleAddToCart = () => {
     if (!product) return;
-    onAddToCart(product, selectedAccessories);
+    onAddToCart(product, selectedEquipments);
     onClose();
   };
   const nextImage = () => {
@@ -222,7 +222,7 @@ export const ProductDetailModal = ({
                     </TabsTrigger>
                     <TabsTrigger value="accessories" className="data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-elegant rounded-lg transition-all duration-300 font-semibold flex items-center gap-2">
                       <Package className="w-4 h-4" />
-                      Acessórios ({selectedAccessories.length})
+                      Equipamentos ({selectedEquipments.length})
                     </TabsTrigger>
                   </TabsList>
                   
@@ -254,10 +254,10 @@ export const ProductDetailModal = ({
                   </TabsContent>
                   
                   <TabsContent value="accessories" className="space-y-6 mt-8">
-                    {productAccessories.length > 0 ? (
+                    {productEquipments.length > 0 ? (
                       <div className="space-y-8">
                         {/* Equipamentos Obrigatórios */}
-                        {productAccessories.filter(acc => acc.required).length > 0 && (
+                        {productEquipments.filter(eq => eq.required).length > 0 && (
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
                               <Shield className="w-5 h-5 text-destructive" />
@@ -271,30 +271,30 @@ export const ProductDetailModal = ({
                             </p>
                             
                             <div className="space-y-3">
-                              {productAccessories.filter(acc => acc.required).map(accessory => {
-                                const selectedAcc = selectedAccessories.find(acc => acc.id === accessory.id);
+                              {productEquipments.filter(eq => eq.required).map(equipment => {
+                                const selectedEq = selectedEquipments.find(eq => eq.id === equipment.id);
                                 return (
-                                  <Card key={accessory.id} className="border-destructive/30 bg-destructive/5">
+                                  <Card key={equipment.id} className="border-destructive/30 bg-destructive/5">
                                     <CardContent className="p-4">
                                       <div className="flex items-center gap-4">
-                                        {accessory.image_url && (
+                                        {equipment.image_url && (
                                           <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-destructive/20">
-                                            <LazyImage src={accessory.image_url} alt={accessory.name} className="w-full h-full object-cover" />
+                                            <LazyImage src={equipment.image_url} alt={equipment.name} className="w-full h-full object-cover" />
                                           </div>
                                         )}
                                         
                                         <div className="flex-1">
                                           <div className="flex items-center gap-3">
-                                            <h5 className="font-semibold text-foreground">{accessory.name}</h5>
+                                            <h5 className="font-semibold text-foreground">{equipment.name}</h5>
                                             <Badge className="bg-destructive/20 text-destructive text-xs">
                                               ✓ Incluso
                                             </Badge>
                                           </div>
-                                          {accessory.description && (
-                                            <p className="text-sm text-muted-foreground mt-1">{accessory.description}</p>
+                                          {equipment.description && (
+                                            <p className="text-sm text-muted-foreground mt-1">{equipment.description}</p>
                                           )}
                                           <p className="text-sm font-medium text-destructive mt-1">
-                                            R$ {(accessory.price || 0).toLocaleString('pt-BR')} - Qtd: {selectedAcc?.quantity || 1}
+                                            R$ {(equipment.price || 0).toLocaleString('pt-BR')} - Qtd: {selectedEq?.quantity || 1}
                                           </p>
                                         </div>
                                       </div>
@@ -307,7 +307,7 @@ export const ProductDetailModal = ({
                         )}
 
                         {/* Equipamentos Opcionais */}
-                        {productAccessories.filter(acc => !acc.required).length > 0 && (
+                        {productEquipments.filter(eq => !eq.required).length > 0 && (
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
                               <Settings className="w-5 h-5 text-accent" />
@@ -321,39 +321,39 @@ export const ProductDetailModal = ({
                             </p>
                             
                             <div className="space-y-3">
-                              {productAccessories.filter(acc => !acc.required).map(accessory => {
-                                const isSelected = selectedAccessories.some(acc => acc.id === accessory.id);
-                                const selectedAcc = selectedAccessories.find(acc => acc.id === accessory.id);
+                              {productEquipments.filter(eq => !eq.required).map(equipment => {
+                                const isSelected = selectedEquipments.some(eq => eq.id === equipment.id);
+                                const selectedEq = selectedEquipments.find(eq => eq.id === equipment.id);
                                 
                                 return (
-                                  <Card key={accessory.id} className={`transition-all duration-300 border-2 hover:shadow-elegant ${isSelected ? 'border-accent shadow-glow bg-accent/5' : 'border-border/30 hover:border-accent/50'}`}>
+                                  <Card key={equipment.id} className={`transition-all duration-300 border-2 hover:shadow-elegant ${isSelected ? 'border-accent shadow-glow bg-accent/5' : 'border-border/30 hover:border-accent/50'}`}>
                                     <CardContent className="p-4">
                                       <div className="flex items-start gap-4">
                                         <Checkbox 
                                           checked={isSelected} 
-                                          onCheckedChange={() => toggleAccessory(accessory)} 
+                                          onCheckedChange={() => toggleEquipment(equipment)} 
                                           className="mt-2 data-[state=checked]:bg-accent data-[state=checked]:border-accent w-5 h-5" 
                                         />
                                         
-                                        {accessory.image_url && (
+                                        {equipment.image_url && (
                                           <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-border/30">
-                                            <LazyImage src={accessory.image_url} alt={accessory.name} className="w-full h-full object-cover" />
+                                            <LazyImage src={equipment.image_url} alt={equipment.name} className="w-full h-full object-cover" />
                                           </div>
                                         )}
                                         
                                         <div className="flex-1 space-y-3">
                                           <div>
-                                            <h5 className="font-semibold text-foreground text-lg">{accessory.name}</h5>
-                                            {accessory.description && (
+                                            <h5 className="font-semibold text-foreground text-lg">{equipment.name}</h5>
+                                            {equipment.description && (
                                               <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
-                                                {accessory.description}
+                                                {equipment.description}
                                               </p>
                                             )}
                                           </div>
                                           
                                           <div className="flex items-center justify-between">
                                             <span className="text-xl font-bold text-accent">
-                                              R$ {(accessory.price || 0).toLocaleString('pt-BR')}
+                                              R$ {(equipment.price || 0).toLocaleString('pt-BR')}
                                             </span>
                                             
                                             {isSelected && (
@@ -361,19 +361,19 @@ export const ProductDetailModal = ({
                                                 <Button 
                                                   size="sm" 
                                                   variant="outline" 
-                                                  onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) - 1)} 
-                                                  disabled={(selectedAcc?.quantity || 1) <= 1} 
+                                                  onClick={() => updateEquipmentQuantity(equipment.id, (selectedEq?.quantity || 1) - 1)} 
+                                                  disabled={(selectedEq?.quantity || 1) <= 1} 
                                                   className="w-8 h-8 p-0 hover:bg-accent hover:text-accent-foreground rounded-lg"
                                                 >
                                                   <Minus className="w-4 h-4" />
                                                 </Button>
                                                 <span className="w-8 text-center font-bold text-foreground">
-                                                  {selectedAcc?.quantity || 1}
+                                                  {selectedEq?.quantity || 1}
                                                 </span>
                                                 <Button 
                                                   size="sm" 
                                                   variant="outline" 
-                                                  onClick={() => updateAccessoryQuantity(accessory.id, (selectedAcc?.quantity || 1) + 1)} 
+                                                  onClick={() => updateEquipmentQuantity(equipment.id, (selectedEq?.quantity || 1) + 1)} 
                                                   className="w-8 h-8 p-0 hover:bg-accent hover:text-accent-foreground rounded-lg"
                                                 >
                                                   <Plus className="w-4 h-4" />
@@ -412,8 +412,8 @@ export const ProductDetailModal = ({
                         <span className="text-4xl font-bold">
                           R$ {totalPrice.toLocaleString('pt-BR')}
                         </span>
-                        {selectedAccessories.length > 0 && <p className="text-primary-foreground/80 text-sm mt-1">
-                            Produto + {selectedAccessories.length} acessório(s)
+                        {selectedEquipments.length > 0 && <p className="text-primary-foreground/80 text-sm mt-1">
+                            Produto + {selectedEquipments.length} equipamento(s)
                           </p>}
                       </div>
                     </div>
@@ -423,9 +423,9 @@ export const ProductDetailModal = ({
                       Adicionar ao Orçamento
                     </Button>
                     
-                    {selectedAccessories.length > 0 && <div className="pt-4 border-t border-primary-foreground/20">
+                    {selectedEquipments.length > 0 && <div className="pt-4 border-t border-primary-foreground/20">
                         <p className="text-primary-foreground/90 text-center text-sm font-medium">
-                          ✅ Incluindo {selectedAccessories.length} acessório(s) selecionado(s)
+                          ✅ Incluindo {selectedEquipments.length} equipamento(s) selecionado(s)
                         </p>
                       </div>}
                   </div>
