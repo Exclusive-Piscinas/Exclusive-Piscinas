@@ -19,7 +19,7 @@ interface ProductEquipmentState extends Equipment {
 }
 
 const ProductEquipmentsField = ({ productId }: ProductEquipmentsFieldProps) => {
-  const { equipments, fetchProductEquipments, addEquipmentToProduct, removeEquipmentFromProduct } = useEquipments();
+  const { equipments, fetchProductEquipments, addEquipmentToProduct, removeEquipmentFromProduct, updateProductEquipment } = useEquipments();
   const [productEquipments, setProductEquipments] = useState<ProductEquipmentState[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -107,8 +107,11 @@ const ProductEquipmentsField = ({ productId }: ProductEquipmentsFieldProps) => {
       )
     );
 
-    // TODO: Update in database - this might require a separate API endpoint
-    // For now, we're just updating the UI
+    // Persist to database if already associated
+    const eqState = productEquipments.find(eq => eq.id === equipmentId);
+    if (eqState?.isAssociated) {
+      await updateProductEquipment(productId, equipmentId, { required });
+    }
   };
 
   const handleSortOrderChange = async (equipmentId: string, sortOrder: number) => {
@@ -121,8 +124,11 @@ const ProductEquipmentsField = ({ productId }: ProductEquipmentsFieldProps) => {
       )
     );
 
-    // TODO: Update in database - this might require a separate API endpoint
-    // For now, we're just updating the UI
+    // Persist to database if already associated
+    const eqState = productEquipments.find(eq => eq.id === equipmentId);
+    if (eqState?.isAssociated) {
+      await updateProductEquipment(productId, equipmentId, { sort_order: sortOrder });
+    }
   };
 
   if (loading) {

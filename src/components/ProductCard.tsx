@@ -19,7 +19,7 @@ interface ProductCardProps {
     name: string;
     slug: string;
   };
-  onAddToCart?: (product: Product, accessories?: any[]) => void;
+  onAddToCart?: (product: Product, equipments?: any[]) => void;
 }
 
 const ProductCard = ({ 
@@ -59,9 +59,9 @@ const ProductCard = ({
     updated_at: '',
   };
 
-  const handleAddToCart = (productData: Product, accessories: any[] = []) => {
+  const handleAddToCart = (productData: Product, equipments: any[] = []) => {
     if (onAddToCart) {
-      onAddToCart(productData, accessories);
+      onAddToCart(productData, equipments);
     }
     setShowDetailModal(false);
   };

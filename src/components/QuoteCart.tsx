@@ -14,6 +14,12 @@ import LazyImage from '@/components/LazyImage';
 interface CartItem {
   product: Product;
   quantity: number;
+  equipments?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
   accessories?: {
     id: string;
     name: string;
@@ -44,14 +50,18 @@ const QuoteCart = ({
   const { createQuote } = useQuotes();
   const { toast } = useToast();
   const { generateWhatsAppLink, whatsappNumber } = useWhatsApp();
-  const totalAmount = cartItems.reduce((sum, item) => {
-    const productTotal = (item.product.price || 0) * item.quantity;
-    const accessoriesTotal = (item.accessories || []).reduce(
-      (accSum, acc) => accSum + (acc.price * acc.quantity),
-      0
-    );
-    return sum + productTotal + accessoriesTotal;
-  }, 0);
+const totalAmount = cartItems.reduce((sum, item) => {
+  const productTotal = (item.product.price || 0) * item.quantity;
+  const accessoriesTotal = (item.accessories || []).reduce(
+    (accSum, acc) => accSum + (acc.price * acc.quantity),
+    0
+  );
+  const equipmentsTotal = (item.equipments || []).reduce(
+    (eqSum, eq) => eqSum + (eq.price * eq.quantity),
+    0
+  );
+  return sum + productTotal + accessoriesTotal + equipmentsTotal;
+}, 0);
   const handleSubmitQuote = async () => {
     if (cartItems.length === 0) {
       toast({
@@ -86,7 +96,13 @@ const QuoteCart = ({
           accessory_name: acc.name,
           accessory_price: acc.price,
           quantity: acc.quantity
-        }))
+        })),
+        equipments: item.equipments?.map(eq => ({
+          equipment_id: eq.id,
+          equipment_name: eq.name,
+          equipment_price: eq.price,
+          quantity: eq.quantity
+        })),
       }))
     };
     const {
@@ -142,9 +158,17 @@ const QuoteCart = ({
           message += `    - ${acc.name} (${acc.quantity}x) - R$ ${(acc.price * acc.quantity).toLocaleString('pt-BR')}\n`;
         });
       }
-      
+
+      if (item.equipments && item.equipments.length > 0) {
+        message += `  🔧 *Equipamentos selecionados:*\n`;
+        item.equipments.forEach(eq => {
+          message += `    - ${eq.name} (${eq.quantity}x) - R$ ${(eq.price * eq.quantity).toLocaleString('pt-BR')}\n`;
+        });
+      }
+
       const itemTotal = (item.product.price || 0) * item.quantity + 
-        (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0);
+        (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0) +
+        (item.equipments || []).reduce((sum, eq) => sum + (eq.price * eq.quantity), 0);
       message += `  *Total do item: R$ ${itemTotal.toLocaleString('pt-BR')}*\n`;
     });
     message += `\n💰 *VALOR TOTAL: R$ ${totalAmount.toLocaleString('pt-BR')}*\n`;
@@ -260,6 +284,25 @@ const QuoteCart = ({
                             </Button>
                           </div>
                           
+                          {/* Equipamentos */}
+                          {item.equipments && item.equipments.length > 0 && (
+                            <div className="space-y-2">
+                              <h5 className="text-sm font-medium text-muted-foreground">Equipamentos selecionados:</h5>
+                              <div className="space-y-1">
+                                {item.equipments.map((eq, index) => (
+                                  <div key={index} className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">
+                                      {eq.name} ({eq.quantity}x)
+                                    </span>
+                                    <span className="text-accent">
+                                      R$ {(eq.price * eq.quantity).toLocaleString('pt-BR')}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
                           {/* Acessórios */}
                           {item.accessories && item.accessories.length > 0 && (
                             <div className="space-y-2">
@@ -295,12 +338,21 @@ const QuoteCart = ({
                                   </span>
                                 </div>
                               )}
+                              {item.equipments && item.equipments.length > 0 && (
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Equipamentos:</span>
+                                  <span className="text-accent">
+                                    R$ {item.equipments.reduce((sum, eq) => sum + (eq.price * eq.quantity), 0).toLocaleString('pt-BR')}
+                                  </span>
+                                </div>
+                              )}
                               <div className="flex justify-between items-center pt-1 border-t border-border/10">
                                 <span className="font-medium text-foreground">Subtotal:</span>
                                 <span className="font-bold text-foreground">
                                   R$ {(
                                     (item.product.price || 0) * item.quantity + 
-                                    (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0)
+                                    (item.accessories || []).reduce((sum, acc) => sum + (acc.price * acc.quantity), 0) +
+                                    (item.equipments || []).reduce((sum, eq) => sum + (eq.price * eq.quantity), 0)
                                   ).toLocaleString('pt-BR')}
                                 </span>
                               </div>

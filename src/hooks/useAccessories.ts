@@ -207,6 +207,34 @@ export const useAccessories = () => {
     }
   };
 
+  const updateProductAccessory = async (
+    productId: string,
+    accessoryId: string,
+    updates: { required?: boolean; sort_order?: number }
+  ) => {
+    try {
+      const { error } = await supabase
+        .from('product_accessories')
+        .update(updates)
+        .eq('product_id', productId)
+        .eq('accessory_id', accessoryId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Sucesso",
+        description: "Vínculo do acessório atualizado!",
+      });
+    } catch (error: any) {
+      console.error('Error updating accessory on product:', error);
+      toast({
+        title: "Erro ao atualizar acessório",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const removeAccessoryFromProduct = async (productId: string, accessoryId: string) => {
     try {
       const { error } = await supabase
@@ -244,6 +272,7 @@ export const useAccessories = () => {
     updateAccessory,
     deleteAccessory,
     addAccessoryToProduct,
+    updateProductAccessory,
     removeAccessoryFromProduct,
   };
 };

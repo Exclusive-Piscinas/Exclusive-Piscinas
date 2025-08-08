@@ -16,6 +16,8 @@ export interface Quote {
   created_at: string;
   updated_at: string;
   quote_items?: QuoteItem[];
+  quote_accessories?: QuoteAccessory[];
+  quote_equipments?: QuoteEquipment[];
 }
 
 export interface QuoteItem {
@@ -27,6 +29,28 @@ export interface QuoteItem {
   quantity: number;
   subtotal: number;
   created_at: string;
+}
+
+export interface QuoteAccessory {
+  id?: string;
+  quote_id?: string;
+  accessory_id: string | null;
+  accessory_name: string;
+  accessory_price: number;
+  quantity: number;
+  subtotal?: number;
+  created_at?: string;
+}
+
+export interface QuoteEquipment {
+  id?: string;
+  quote_id?: string;
+  equipment_id: string;
+  equipment_name: string;
+  equipment_price: number;
+  quantity: number;
+  subtotal?: number;
+  created_at?: string;
 }
 
 export interface CreateQuoteData {
@@ -46,6 +70,12 @@ export interface CreateQuoteData {
       accessory_price: number;
       quantity: number;
     }[];
+    equipments?: {
+      equipment_id: string;
+      equipment_name: string;
+      equipment_price: number;
+      quantity: number;
+    }[];
   }[];
 }
 
@@ -62,7 +92,8 @@ export const useQuotes = () => {
         .select(`
           *,
           quote_items(*),
-          quote_accessories(*)
+          quote_accessories(*),
+          quote_equipments(*)
         `)
         .order('created_at', { ascending: false });
 
@@ -84,14 +115,18 @@ export const useQuotes = () => {
       // Generate quote number
       const quoteNumber = `EXC-${Date.now()}`;
       
-      // Calculate total amount including accessories
+      // Calculate total amount including accessories and equipments
       const totalAmount = quoteData.items.reduce((sum, item) => {
         const itemTotal = item.product_price * item.quantity;
         const accessoriesTotal = (item.accessories || []).reduce(
           (accSum, acc) => accSum + (acc.accessory_price * acc.quantity),
           0
         );
-        return sum + itemTotal + accessoriesTotal;
+        const equipmentsTotal = (item.equipments || []).reduce(
+          (eqSum, eq) => eqSum + (eq.equipment_price * eq.quantity),
+          0
+        );
+        return sum + itemTotal + accessoriesTotal + equipmentsTotal;
       }, 0);
 
       // Create quote
@@ -147,7 +182,26 @@ export const useQuotes = () => {
         if (accessoriesError) throw accessoriesError;
       }
 
-      // Generate PDF automatically
+      // Create quote equipments for all items
+      const allEquipments = quoteData.items.flatMap(item => 
+        (item.equipments || []).map(eq => ({
+          quote_id: quote.id,
+          equipment_id: eq.equipment_id,
+          equipment_name: eq.equipment_name,
+          equipment_price: eq.equipment_price,
+          quantity: eq.quantity,
+          subtotal: eq.equipment_price * eq.quantity,
+        }))
+      );
+
+      if (allEquipments.length > 0) {
+        const { error: equipmentsError } = await supabase
+          .from('quote_equipments')
+          .insert(allEquipments);
+
+        if (equipmentsError) throw equipmentsError;
+      }
+
       try {
         const { error: pdfError } = await supabase.functions.invoke('generate-quote-pdf', {
           body: { quoteId: quote.id }

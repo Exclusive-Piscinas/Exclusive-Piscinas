@@ -32,6 +32,14 @@ interface Quote {
   created_at: string;
   quote_items: QuoteItem[];
   quote_accessories: QuoteAccessory[];
+  quote_equipments: QuoteEquipment[];
+}
+
+interface QuoteEquipment {
+  equipment_name: string;
+  equipment_price: number;
+  quantity: number;
+  subtotal: number;
 }
 
 serve(async (req) => {
@@ -60,7 +68,8 @@ serve(async (req) => {
       .select(`
         *,
         quote_items(*),
-        quote_accessories(*)
+        quote_accessories(*),
+        quote_equipments(*)
       `)
       .eq('id', quoteId)
       .single();
@@ -143,7 +152,7 @@ serve(async (req) => {
         <!-- Acessórios -->
         ${quote.quote_accessories && quote.quote_accessories.length > 0 ? `
           <div style="margin-bottom: 30px;">
-            <h3 style="color: #007bff; margin-bottom: 15px;">Acessórios e Equipamentos</h3>
+            <h3 style="color: #007bff; margin-bottom: 15px;">Acessórios</h3>
             <table class="items-table">
               <thead>
                 <tr>
@@ -160,6 +169,33 @@ serve(async (req) => {
                     <td>R$ ${accessory.accessory_price.toLocaleString('pt-BR')}</td>
                     <td>${accessory.quantity}</td>
                     <td>R$ ${accessory.subtotal.toLocaleString('pt-BR')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : ''}
+
+        <!-- Equipamentos -->
+        ${quote.quote_equipments && quote.quote_equipments.length > 0 ? `
+          <div style="margin-bottom: 30px;">
+            <h3 style="color: #007bff; margin-bottom: 15px;">Equipamentos</h3>
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Equipamento</th>
+                  <th>Preço Unitário</th>
+                  <th>Quantidade</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${quote.quote_equipments.map((eq: QuoteEquipment) => `
+                  <tr>
+                    <td>${eq.equipment_name}</td>
+                    <td>R$ ${eq.equipment_price.toLocaleString('pt-BR')}</td>
+                    <td>${eq.quantity}</td>
+                    <td>R$ ${eq.subtotal.toLocaleString('pt-BR')}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -206,11 +242,17 @@ serve(async (req) => {
       throw new Error(`Upload failed: ${uploadError.message}`);
     }
 
-    // Get public URL
-    const { data: { publicUrl } } = supabaseClient
+    // Create signed URL (bucket is private)
+    const { data: signedData, error: signedError } = await supabaseClient
       .storage
       .from('quotes')
-      .getPublicUrl(filename);
+      .createSignedUrl(filename, 60 * 60 * 24 * 30); // 30 days
+
+    if (signedError) {
+      throw new Error(`Signing URL failed: ${signedError.message}`);
+    }
+
+    const publicUrl = signedData.signedUrl;
 
     // Update quote with PDF URL
     const { error: updateError } = await supabaseClient

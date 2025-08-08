@@ -7,6 +7,12 @@ import { Button } from '@/components/ui/button';
 interface CartItem {
   product: Product;
   quantity: number;
+  equipments?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
   accessories?: {
     id: string;
     name: string;
@@ -40,8 +46,8 @@ const ProductCatalog = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [categories]);
   const filteredProducts = selectedCategory ? products.filter(product => product.category_id === selectedCategory) : products;
-  const addToCart = (product: Product, accessories: any[] = []) => {
-    const accessoryData = accessories.map(acc => ({
+  const addToCart = (product: Product, equipments: any[] = []) => {
+    const equipmentData = equipments.map(acc => ({
       id: acc.id,
       name: acc.name,
       price: acc.price || 0,
@@ -51,13 +57,13 @@ const ProductCatalog = () => {
     setCartItems(prev => {
       const existingItem = prev.find(item => 
         item.product.id === product.id && 
-        JSON.stringify(item.accessories || []) === JSON.stringify(accessoryData)
+        JSON.stringify(item.equipments || []) === JSON.stringify(equipmentData)
       );
       
       if (existingItem) {
         return prev.map(item => 
           item.product.id === product.id && 
-          JSON.stringify(item.accessories || []) === JSON.stringify(accessoryData)
+          JSON.stringify(item.equipments || []) === JSON.stringify(equipmentData)
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -66,7 +72,7 @@ const ProductCatalog = () => {
       return [...prev, {
         product,
         quantity: 1,
-        accessories: accessoryData.length > 0 ? accessoryData : undefined
+        equipments: equipmentData.length > 0 ? equipmentData : undefined
       }];
     });
   };

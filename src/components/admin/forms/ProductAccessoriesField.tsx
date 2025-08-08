@@ -19,7 +19,7 @@ interface AccessoryState extends Accessory {
 }
 
 const ProductAccessoriesField = ({ productId }: ProductAccessoriesFieldProps) => {
-  const { accessories, loading, fetchProductAccessories, addAccessoryToProduct, removeAccessoryFromProduct } = useAccessories();
+  const { accessories, loading, fetchProductAccessories, addAccessoryToProduct, removeAccessoryFromProduct, updateProductAccessory } = useAccessories();
   const [accessoryStates, setAccessoryStates] = useState<AccessoryState[]>([]);
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
@@ -86,14 +86,22 @@ const ProductAccessoriesField = ({ productId }: ProductAccessoriesFieldProps) =>
     setAccessoryStates(prev => 
       prev.map(a => a.id === accessoryId ? { ...a, required } : a)
     );
-    // Note: This only updates local state. To persist, we'd need to update the product_accessories table
+    // Persist if associated
+    const acc = accessoryStates.find(a => a.id === accessoryId);
+    if (acc?.isAssociated) {
+      updateProductAccessory(productId, accessoryId, { required });
+    }
   };
 
   const handleSortOrderChange = (accessoryId: string, sortOrder: number) => {
     setAccessoryStates(prev => 
       prev.map(a => a.id === accessoryId ? { ...a, sortOrder } : a)
     );
-    // Note: This only updates local state. To persist, we'd need to update the product_accessories table
+    // Persist if associated
+    const acc = accessoryStates.find(a => a.id === accessoryId);
+    if (acc?.isAssociated) {
+      updateProductAccessory(productId, accessoryId, { sort_order: sortOrder });
+    }
   };
 
   if (loading) {
