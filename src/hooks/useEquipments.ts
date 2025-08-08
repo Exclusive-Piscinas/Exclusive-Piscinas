@@ -214,6 +214,35 @@ export const useEquipments = () => {
     }
   };
 
+  const updateProductEquipment = async (
+    productId: string,
+    equipmentId: string,
+    updates: { required?: boolean; sort_order?: number }
+  ) => {
+    try {
+      const { error } = await supabase
+        .from('product_equipments')
+        .update(updates)
+        .eq('product_id', productId)
+        .eq('equipment_id', equipmentId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Vínculo de equipamento atualizado!",
+      });
+
+      return { error: null };
+    } catch (error: any) {
+      toast({
+        title: "Erro ao atualizar vínculo",
+        description: error.message,
+        variant: "destructive",
+      });
+      return { error };
+    }
+  };
+
   useEffect(() => {
     fetchEquipments();
   }, []);
@@ -228,5 +257,6 @@ export const useEquipments = () => {
     deleteEquipment,
     addEquipmentToProduct,
     removeEquipmentFromProduct,
+    updateProductEquipment,
   };
 };

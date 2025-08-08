@@ -98,7 +98,7 @@ export const useQuotes = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setQuotes(data || []);
+      setQuotes((data as unknown as Quote[]) || []);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar orçamentos",
