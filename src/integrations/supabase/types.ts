@@ -356,7 +356,22 @@ export type Database = {
           quote_id?: string
           subtotal?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_quote_accessories_accessory_id"
+            columns: ["accessory_id"]
+            isOneToOne: false
+            referencedRelation: "accessories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_quote_accessories_quote_id"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quote_equipments: {
         Row: {
@@ -390,6 +405,20 @@ export type Database = {
           subtotal?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_quote_equipments_equipment_id"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_quote_equipments_quote_id"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quote_accessories_accessory_id_fkey"
             columns: ["equipment_id"]
@@ -438,6 +467,20 @@ export type Database = {
           subtotal?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_quote_items_product_id"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_quote_items_quote_id"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quote_items_product_id_fkey"
             columns: ["product_id"]
