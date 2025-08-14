@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { ShoppingCart, Trash2, Plus, Minus, MessageCircle } from 'lucide-react';
 import { useQuotes, CreateQuoteData } from '@/hooks/useQuotes';
 import { useToast } from '@/hooks/use-toast';
+import { validateInput, sanitizeText } from '@/utils/sanitizer';
+import { rateLimit } from '@/utils/security';
 import { useWhatsApp } from '@/hooks/useWhatsApp';
 import { Product } from '@/hooks/useProducts';
 import LazyImage from '@/components/LazyImage';
@@ -71,10 +73,48 @@ const totalAmount = cartItems.reduce((sum, item) => {
       });
       return;
     }
+    // SECURITY: Validate input data
     if (!customerData.name || !customerData.email || !customerData.phone) {
       toast({
         title: "Dados obrigatórios",
         description: "Preencha nome, email e telefone para continuar.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateInput.name(customerData.name)) {
+      toast({
+        title: "Nome inválido",
+        description: "Por favor, insira um nome válido (2-100 caracteres).",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateInput.email(customerData.email)) {
+      toast({
+        title: "Email inválido",
+        description: "Por favor, insira um email válido.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateInput.phone(customerData.phone)) {
+      toast({
+        title: "Telefone inválido",
+        description: "Por favor, insira um telefone válido.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // SECURITY: Rate limiting
+    if (!rateLimit.checkQuoteSubmission(customerData.email)) {
+      toast({
+        title: "Muitas tentativas",
+        description: "Aguarde um momento antes de enviar outro orçamento.",
         variant: "destructive"
       });
       return;

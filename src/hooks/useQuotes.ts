@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { validateInput, sanitizeText } from '@/utils/sanitizer';
 
 export interface Quote {
   id: string;
@@ -112,6 +113,17 @@ export const useQuotes = () => {
 
   const createQuote = async (quoteData: CreateQuoteData) => {
     try {
+      // SECURITY: Input validation
+      if (!validateInput.name(quoteData.customer_name)) {
+        throw new Error('Nome do cliente inválido');
+      }
+      if (!validateInput.email(quoteData.customer_email)) {
+        throw new Error('Email inválido');
+      }
+      if (!validateInput.phone(quoteData.customer_phone)) {
+        throw new Error('Telefone inválido');
+      }
+
       // Generate quote number
       const quoteNumber = `EXC-${Date.now()}`;
       
@@ -129,16 +141,21 @@ export const useQuotes = () => {
         return sum + itemTotal + accessoriesTotal + equipmentsTotal;
       }, 0);
 
-      // Create quote
+      // SECURITY: Validate total amount
+      if (!validateInput.price(totalAmount)) {
+        throw new Error('Valor total inválido');
+      }
+
+      // Create quote with sanitized data
       const { data: quote, error: quoteError } = await supabase
         .from('quotes')
         .insert([{
           quote_number: quoteNumber,
-          customer_name: quoteData.customer_name,
-          customer_email: quoteData.customer_email,
-          customer_phone: quoteData.customer_phone,
-          customer_address: quoteData.customer_address,
-          notes: quoteData.notes,
+          customer_name: sanitizeText(quoteData.customer_name),
+          customer_email: quoteData.customer_email.toLowerCase().trim(),
+          customer_phone: sanitizeText(quoteData.customer_phone),
+          customer_address: sanitizeText(quoteData.customer_address || ''),
+          notes: sanitizeText(quoteData.notes || ''),
           total_amount: totalAmount,
         }])
         .select()

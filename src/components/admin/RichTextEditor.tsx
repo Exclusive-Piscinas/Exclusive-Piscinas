@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { sanitizeHtml } from '@/utils/sanitizer';
 
 interface RichTextEditorProps {
   value: string;
@@ -19,6 +20,11 @@ export const RichTextEditor = ({
   className,
   readOnly = false 
 }: RichTextEditorProps) => {
+  // SECURITY: Sanitize content when it changes
+  const handleChange = useCallback((content: string) => {
+    const sanitizedContent = sanitizeHtml(content);
+    onChange(sanitizedContent);
+  }, [onChange]);
   const modules = useMemo(() => ({
     toolbar: readOnly ? false : {
       container: [
@@ -52,7 +58,7 @@ export const RichTextEditor = ({
         <ReactQuill
           theme="snow"
           value={value}
-          onChange={onChange}
+          onChange={readOnly ? undefined : handleChange}
           placeholder={placeholder}
           modules={modules}
           formats={formats}

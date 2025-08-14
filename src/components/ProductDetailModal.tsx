@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sanitizeHtml } from '@/utils/sanitizer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -230,7 +231,7 @@ export const ProductDetailModal = ({
                     <div className="bg-gradient-card p-8 rounded-2xl border border-border/30 shadow-card">
                       <div className="prose prose-invert max-w-none">
                         {product.description ? <div dangerouslySetInnerHTML={{
-                        __html: product.description
+                        __html: sanitizeHtml(product.description)
                       }} className="text-foreground leading-relaxed [&_p]:mb-4 [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_strong]:text-accent [&_em]:text-accent" /> : <div className="text-center py-16">
                             <Package className="w-20 h-20 text-muted-foreground mx-auto mb-6" />
                             <p className="text-muted-foreground text-xl">Descrição não disponível para este produto.</p>
