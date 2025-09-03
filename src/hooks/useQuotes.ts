@@ -80,7 +80,7 @@ export interface CreateQuoteData {
   }[];
 }
 
-export const useQuotes = () => {
+export const useQuotes = (options?: { autoFetch?: boolean }) => {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -92,9 +92,9 @@ export const useQuotes = () => {
         .from('quotes')
         .select(`
           *,
-          quote_items(*),
-          quote_accessories(*),
-          quote_equipments(*)
+          quote_items:quote_items!fk_quote_items_quote_id(*),
+          quote_accessories:quote_accessories!fk_quote_accessories_quote_id(*),
+          quote_equipments:quote_equipments!fk_quote_equipments_quote_id(*)
         `)
         .order('created_at', { ascending: false });
 
@@ -278,8 +278,10 @@ export const useQuotes = () => {
   };
 
   useEffect(() => {
-    fetchQuotes();
-  }, []);
+    if (options?.autoFetch) {
+      fetchQuotes();
+    }
+  }, [options?.autoFetch]);
 
   return {
     quotes,

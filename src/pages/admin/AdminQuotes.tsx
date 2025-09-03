@@ -46,7 +46,7 @@ import {
 } from 'lucide-react';
 
 const AdminQuotes = () => {
-  const { quotes, loading, updateQuoteStatus } = useQuotes();
+  const { quotes, loading, updateQuoteStatus } = useQuotes({ autoFetch: true });
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);

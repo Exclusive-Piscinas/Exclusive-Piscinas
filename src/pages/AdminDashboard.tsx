@@ -10,7 +10,7 @@ import { BarChart3, Package, FileText, Settings, LogOut, Users, TrendingUp } fro
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const { products } = useProducts();
-  const { quotes } = useQuotes();
+  const { quotes } = useQuotes({ autoFetch: true });
   const navigate = useNavigate();
 
   useEffect(() => {
