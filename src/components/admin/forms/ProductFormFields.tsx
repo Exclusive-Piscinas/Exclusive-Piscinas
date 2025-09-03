@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -39,39 +39,34 @@ interface BasicFieldsProps {
 }
 
 export const BasicFields = memo(({ formData, onFieldChange, categories, generateSlug }: BasicFieldsProps) => {
-  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-    onFieldChange('name', name);
-    onFieldChange('slug', generateSlug(name));
-  }, [onFieldChange, generateSlug]);
-
-  const handleSlugChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onFieldChange('slug', e.target.value);
-  }, [onFieldChange]);
-
-  const handleCategoryChange = useCallback((value: string) => {
-    onFieldChange('category_id', value);
-  }, [onFieldChange]);
-
-  const handlePriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onFieldChange('price', parseFloat(e.target.value) || 0);
-  }, [onFieldChange]);
-
-  const handleSalePriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onFieldChange('sale_price', parseFloat(e.target.value) || 0);
-  }, [onFieldChange]);
-
-  const handleStockStatusChange = useCallback((value: string) => {
-    onFieldChange('stock_status', value);
-  }, [onFieldChange]);
-
-  const handleActiveChange = useCallback((checked: boolean) => {
-    onFieldChange('active', checked);
-  }, [onFieldChange]);
-
-  const handleFeaturedChange = useCallback((checked: boolean) => {
-    onFieldChange('featured', checked);
-  }, [onFieldChange]);
+  const handlers = useMemo(() => ({
+    handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      const name = e.target.value;
+      onFieldChange('name', name);
+      onFieldChange('slug', generateSlug(name));
+    },
+    handleSlugChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      onFieldChange('slug', e.target.value);
+    },
+    handleCategoryChange: (value: string) => {
+      onFieldChange('category_id', value);
+    },
+    handlePriceChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      onFieldChange('price', parseFloat(e.target.value) || 0);
+    },
+    handleSalePriceChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      onFieldChange('sale_price', parseFloat(e.target.value) || 0);
+    },
+    handleStockStatusChange: (value: string) => {
+      onFieldChange('stock_status', value);
+    },
+    handleActiveChange: (checked: boolean) => {
+      onFieldChange('active', checked);
+    },
+    handleFeaturedChange: (checked: boolean) => {
+      onFieldChange('featured', checked);
+    }
+  }), [onFieldChange, generateSlug]);
 
   return (
     <div className="space-y-4">
@@ -81,7 +76,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
           <Input
             id="name"
             value={formData.name}
-            onChange={handleNameChange}
+            onChange={handlers.handleNameChange}
             placeholder="Nome do produto"
           />
         </div>
@@ -91,7 +86,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
           <Input
             id="slug"
             value={formData.slug}
-            onChange={handleSlugChange}
+            onChange={handlers.handleSlugChange}
             placeholder="slug-do-produto"
             className="font-mono text-sm"
           />
@@ -101,7 +96,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="category_id">Categoria</Label>
-          <Select value={formData.category_id} onValueChange={handleCategoryChange}>
+          <Select value={formData.category_id} onValueChange={handlers.handleCategoryChange}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione uma categoria" />
             </SelectTrigger>
@@ -121,7 +116,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
             id="price"
             type="number"
             value={formData.price}
-            onChange={handlePriceChange}
+            onChange={handlers.handlePriceChange}
             placeholder="0.00"
             min="0"
             step="0.01"
@@ -134,7 +129,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
             id="sale_price"
             type="number"
             value={formData.sale_price}
-            onChange={handleSalePriceChange}
+            onChange={handlers.handleSalePriceChange}
             placeholder="0.00"
             min="0"
             step="0.01"
@@ -144,7 +139,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
 
       <div className="space-y-2">
         <Label htmlFor="stock_status">Status do Estoque</Label>
-        <Select value={formData.stock_status} onValueChange={handleStockStatusChange}>
+        <Select value={formData.stock_status} onValueChange={handlers.handleStockStatusChange}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -161,7 +156,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
           <Switch
             id="active"
             checked={formData.active}
-            onCheckedChange={handleActiveChange}
+            onCheckedChange={handlers.handleActiveChange}
           />
           <Label htmlFor="active">Produto ativo</Label>
         </div>
@@ -170,7 +165,7 @@ export const BasicFields = memo(({ formData, onFieldChange, categories, generate
           <Switch
             id="featured"
             checked={formData.featured}
-            onCheckedChange={handleFeaturedChange}
+            onCheckedChange={handlers.handleFeaturedChange}
           />
           <Label htmlFor="featured">Produto em destaque</Label>
         </div>
@@ -198,27 +193,25 @@ export const ContentFields = memo(({
   onAddFeature, 
   onRemoveFeature 
 }: ContentFieldsProps) => {
-  const handleShortDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onFieldChange('short_description', e.target.value);
-  }, [onFieldChange]);
-
-  const handleDescriptionChange = useCallback((value: string) => {
-    onFieldChange('description', value);
-  }, [onFieldChange]);
-
-  const handleNewFeatureChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onNewFeatureChange(e.target.value);
-  }, [onNewFeatureChange]);
-
-  const handleSpecificationsChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onFieldChange('specifications', e.target.value);
-  }, [onFieldChange]);
-
-  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      onAddFeature();
+  const handlers = useMemo(() => ({
+    handleShortDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onFieldChange('short_description', e.target.value);
+    },
+    handleDescriptionChange: (value: string) => {
+      onFieldChange('description', value);
+    },
+    handleNewFeatureChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      onNewFeatureChange(e.target.value);
+    },
+    handleSpecificationsChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onFieldChange('specifications', e.target.value);
+    },
+    handleKeyPress: (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        onAddFeature();
+      }
     }
-  }, [onAddFeature]);
+  }), [onFieldChange, onNewFeatureChange, onAddFeature]);
 
   return (
     <div className="space-y-4">
@@ -227,7 +220,7 @@ export const ContentFields = memo(({
         <Textarea
           id="short_description"
           value={formData.short_description}
-          onChange={handleShortDescriptionChange}
+          onChange={handlers.handleShortDescriptionChange}
           placeholder="Breve descrição do produto..."
           rows={3}
         />
@@ -238,9 +231,9 @@ export const ContentFields = memo(({
         <div className="flex gap-2">
           <Input
             value={newFeature}
-            onChange={handleNewFeatureChange}
+            onChange={handlers.handleNewFeatureChange}
             placeholder="Nova característica..."
-            onKeyPress={handleKeyPress}
+            onKeyPress={handlers.handleKeyPress}
           />
           <Button type="button" onClick={onAddFeature} size="sm">
             <Plus className="h-4 w-4" />
@@ -250,7 +243,7 @@ export const ContentFields = memo(({
         {formData.features.length > 0 && (
           <div className="space-y-2">
             {formData.features.map((feature, index) => (
-              <div key={`feature-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded">
+              <div key={`feature-${feature}-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded">
                 <span className="flex-1">{feature}</span>
                 <Button
                   type="button"
@@ -271,7 +264,7 @@ export const ContentFields = memo(({
         <Textarea
           id="specifications"
           value={formData.specifications}
-          onChange={handleSpecificationsChange}
+          onChange={handlers.handleSpecificationsChange}
           placeholder='{"Peso": "200kg", "Dimensões": "5x3x1.5m"}'
           rows={6}
           className="font-mono text-sm"
@@ -289,13 +282,14 @@ interface SEOFieldsProps {
 }
 
 export const SEOFields = memo(({ formData, onFieldChange }: SEOFieldsProps) => {
-  const handleMetaTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onFieldChange('meta_title', e.target.value);
-  }, [onFieldChange]);
-
-  const handleMetaDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onFieldChange('meta_description', e.target.value);
-  }, [onFieldChange]);
+  const handlers = useMemo(() => ({
+    handleMetaTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      onFieldChange('meta_title', e.target.value);
+    },
+    handleMetaDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onFieldChange('meta_description', e.target.value);
+    }
+  }), [onFieldChange]);
 
   return (
     <div className="space-y-4">
@@ -304,7 +298,7 @@ export const SEOFields = memo(({ formData, onFieldChange }: SEOFieldsProps) => {
         <Input
           id="meta_title"
           value={formData.meta_title}
-          onChange={handleMetaTitleChange}
+          onChange={handlers.handleMetaTitleChange}
           placeholder="Título otimizado para SEO..."
           maxLength={60}
         />
@@ -318,7 +312,7 @@ export const SEOFields = memo(({ formData, onFieldChange }: SEOFieldsProps) => {
         <Textarea
           id="meta_description"
           value={formData.meta_description}
-          onChange={handleMetaDescriptionChange}
+          onChange={handlers.handleMetaDescriptionChange}
           placeholder="Descrição otimizada para SEO..."
           rows={3}
           maxLength={160}

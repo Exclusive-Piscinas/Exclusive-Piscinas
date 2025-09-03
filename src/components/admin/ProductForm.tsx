@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BasicFields, ContentFields, SEOFields } from '@/components/admin/forms/ProductFormFields';
@@ -37,7 +37,20 @@ export const ProductForm = memo(({
   generateSlug,
   isEdit = false,
   productId
-}: ProductFormProps) => (
+}: ProductFormProps) => {
+  // Memoize stable props to prevent unnecessary re-renders
+  const memoizedProps = useMemo(() => ({
+    formData,
+    categories,
+    newFeature,
+    onFieldChange,
+    onNewFeatureChange,
+    onAddFeature,
+    onRemoveFeature,
+    generateSlug
+  }), [formData, categories, newFeature, onFieldChange, onNewFeatureChange, onAddFeature, onRemoveFeature, generateSlug]);
+
+  return (
   <Tabs defaultValue="basic" className="w-full">
     <TabsList className="grid w-full grid-cols-6">
       <TabsTrigger value="basic">Básico</TabsTrigger>
@@ -50,27 +63,27 @@ export const ProductForm = memo(({
 
     <TabsContent value="basic" className="space-y-4">
       <BasicFields
-        formData={formData}
-        onFieldChange={onFieldChange}
-        categories={categories}
-        generateSlug={generateSlug}
+        formData={memoizedProps.formData}
+        onFieldChange={memoizedProps.onFieldChange}
+        categories={memoizedProps.categories}
+        generateSlug={memoizedProps.generateSlug}
       />
     </TabsContent>
 
     <TabsContent value="content" className="space-y-4">
       <ContentFields
-        formData={formData}
-        onFieldChange={onFieldChange}
-        newFeature={newFeature}
-        onNewFeatureChange={onNewFeatureChange}
-        onAddFeature={onAddFeature}
-        onRemoveFeature={onRemoveFeature}
+        formData={memoizedProps.formData}
+        onFieldChange={memoizedProps.onFieldChange}
+        newFeature={memoizedProps.newFeature}
+        onNewFeatureChange={memoizedProps.onNewFeatureChange}
+        onAddFeature={memoizedProps.onAddFeature}
+        onRemoveFeature={memoizedProps.onRemoveFeature}
       />
       
       <div className="space-y-2">
         <RichTextEditor
-          value={formData.description}
-          onChange={(value) => onFieldChange('description', value)}
+          value={memoizedProps.formData.description}
+          onChange={(value) => memoizedProps.onFieldChange('description', value)}
           placeholder="Descrição detalhada do produto..."
         />
       </div>
@@ -81,30 +94,30 @@ export const ProductForm = memo(({
         <ImageUploader
           onImageUploaded={(url) => {}}
           onImagesUploaded={(urls) => {
-            onFieldChange('images', urls);
-            if (!formData.main_image && urls[0]) {
-              onFieldChange('main_image', urls[0]);
+            memoizedProps.onFieldChange('images', urls);
+            if (!memoizedProps.formData.main_image && urls[0]) {
+              memoizedProps.onFieldChange('main_image', urls[0]);
             }
           }}
-          currentImages={formData.images}
+          currentImages={memoizedProps.formData.images}
           multiple
           bucket="products"
           folder="products"
         />
       </div>
 
-      {formData.images.length > 0 && (
+      {memoizedProps.formData.images.length > 0 && (
         <div className="space-y-2">
           <Select 
-            value={formData.main_image} 
-            onValueChange={(value) => onFieldChange('main_image', value)}
+            value={memoizedProps.formData.main_image} 
+            onValueChange={(value) => memoizedProps.onFieldChange('main_image', value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione a imagem principal" />
             </SelectTrigger>
             <SelectContent>
-              {formData.images.map((image, index) => (
-                <SelectItem key={`img-${index}`} value={image}>
+              {memoizedProps.formData.images.map((image, index) => (
+                <SelectItem key={`img-${image.split('/').pop()}-${index}`} value={image}>
                   <div className="flex items-center gap-2">
                     <img src={image} alt={`Imagem ${index + 1}`} className="w-8 h-8 rounded object-cover" />
                     Imagem {index + 1}
@@ -143,11 +156,12 @@ export const ProductForm = memo(({
 
     <TabsContent value="seo" className="space-y-4">
       <SEOFields
-        formData={formData}
-        onFieldChange={onFieldChange}
+        formData={memoizedProps.formData}
+        onFieldChange={memoizedProps.onFieldChange}
       />
     </TabsContent>
   </Tabs>
-));
+  );
+});
 
 ProductForm.displayName = 'ProductForm';

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -25,6 +25,11 @@ export const ImageUploader = ({
 }: ImageUploaderProps) => {
   const { uploadImage, uploadMultipleImages, deleteImage, uploading } = useImageUpload();
   const [previewImages, setPreviewImages] = useState<string[]>(currentImages);
+
+  // Sync with external changes
+  useEffect(() => {
+    setPreviewImages(currentImages);
+  }, [currentImages]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (multiple) {
@@ -106,7 +111,7 @@ export const ImageUploader = ({
           multiple ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1"
         )}>
           {previewImages.map((url, index) => (
-            <Card key={url} className="relative group overflow-hidden">
+            <Card key={`preview-${index}-${url.split('/').pop()}`} className="relative group overflow-hidden">
               <div className="aspect-square relative">
                 <img
                   src={url}

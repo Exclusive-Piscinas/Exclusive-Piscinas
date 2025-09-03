@@ -81,15 +81,24 @@ export const useProductForm = () => {
   }, []);
 
   const handleFieldChange = useCallback((field: keyof ProductFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      // Evita re-render se o valor não mudou
+      if (prev[field] === value) return prev;
+      return { ...prev, [field]: value };
+    });
   }, []);
 
   const addFeature = useCallback(() => {
     if (newFeature.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        features: [...prev.features, newFeature.trim()]
-      }));
+      const trimmedFeature = newFeature.trim();
+      setFormData(prev => {
+        // Evita adicionar features duplicadas
+        if (prev.features.includes(trimmedFeature)) return prev;
+        return {
+          ...prev,
+          features: [...prev.features, trimmedFeature]
+        };
+      });
       setNewFeature('');
     }
   }, [newFeature]);

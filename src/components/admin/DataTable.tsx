@@ -178,9 +178,9 @@ export function DataTable<T extends Record<string, any>>({
               </TableHeader>
               <TableBody>
                 {sortedData.map((item, index) => (
-                  <TableRow key={item.id || index}>
+                  <TableRow key={item.id || `row-${index}-${item.name || item.title || index}`}>
                     {columns.map((column) => (
-                      <TableCell key={column.key as string}>
+                      <TableCell key={`${item.id || index}-${column.key as string}`}>
                         {renderCellContent(column, item)}
                       </TableCell>
                     ))}
